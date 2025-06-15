@@ -15,7 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -24,7 +24,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+// import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Table,
   TableBody,
@@ -138,12 +138,7 @@ export default function Page() {
                             <h4 className="text-center">
                               What home owners say?
                             </h4>
-                            <ScrollArea className="h-[200px] w-full border rounded-lg ">
-                              <ScrollBar
-                                orientation="vertical"
-                                className="z-50"
-                              />
-
+                            <div className="h-[200px] w-full border rounded-lg overflow-y-scroll">
                               {Array.from({ length: 4 }).map((_, ll) => (
                                 <Card
                                   className="border-0! shadow-none!"
@@ -181,7 +176,7 @@ export default function Page() {
                                   </CardContent>
                                 </Card>
                               ))}
-                            </ScrollArea>
+                            </div>
                           </DialogContent>
                         </DialogContent>
                       </Dialog>
@@ -192,10 +187,6 @@ export default function Page() {
             </Table>
           </CardContent>
         </Card>
-
-        <div className="!py-[500px]">
-          <Input type="date" />
-        </div>
 
         <div className="mt-24! mb-12!">
           <Pagination>

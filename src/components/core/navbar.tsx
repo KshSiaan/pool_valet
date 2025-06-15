@@ -7,26 +7,54 @@ import {
   User2Icon,
 } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { PopoverArrow } from "@radix-ui/react-popover";
+import Link from "next/link";
 
 export default function Navbar() {
   const path = usePathname();
   const navig = useRouter();
-  const handleScroll = async () => {
-    if (path === "/") {
+  const shouldScroll = useRef(false); // ✅ useRef instead of state
+  const [scrollTo, setScrollTo] = useState("hiw");
+  function scroller(x: string) {
+    if (x === "hiw") {
       window.scrollBy({
-        top: window.innerHeight, // scrolls down 300px
-        behavior: "smooth", // makes it smooth
+        top: window.innerHeight * 1,
+        behavior: "smooth",
       });
+    } else if (x === "fh") {
+      window.scrollBy({
+        top: window.innerHeight * 1.8,
+        behavior: "smooth",
+      });
+    } else if (x === "fp") {
+      window.scrollBy({
+        top: window.innerHeight * 2.7,
+        behavior: "smooth",
+      });
+    }
+  }
+
+  const handleScroll = (x: string) => {
+    setScrollTo(x);
+    if (path === "/") {
+      scroller(x);
     } else {
+      shouldScroll.current = true; // 👈 mark that we want to scroll after nav
       navig.push("/");
-      handleScroll();
     }
   };
+
+  useEffect(() => {
+    if (shouldScroll.current && path === "/") {
+      scroller(scrollTo);
+      shouldScroll.current = false; // ✅ reset flag
+    }
+  }, [path]);
+
   return (
     <nav className="">
       <div className="!py-2 w-full bg-blue-100 flex flex-row justify-between items-center px-8!">
@@ -57,13 +85,36 @@ export default function Navbar() {
           />
         </div>
         <div className="flex gap-2">
-          <Button variant="ghost">Home</Button>
-          <Button variant="ghost" onClick={handleScroll}>
+          <Button variant="ghost" asChild>
+            <Link href="/">Home</Link>
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              handleScroll("hiw");
+            }}
+          >
             How It Works
           </Button>
-          <Button variant="ghost">For Homeowners</Button>
-          <Button variant="ghost">For Providers</Button>
-          <Button variant="ghost">Get Quotes</Button>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              handleScroll("fh");
+            }}
+          >
+            For Homeowners
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              handleScroll("fp");
+            }}
+          >
+            For Providers
+          </Button>
+          <Button variant="ghost" asChild>
+            <Link href="/get-service">Get Quotes</Link>
+          </Button>
           <Button variant="ghost">My Orders</Button>
         </div>
         <div className="">
