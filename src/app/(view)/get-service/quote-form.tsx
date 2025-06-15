@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -16,23 +17,26 @@ import { ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 export default function QuoteForm() {
+  const [selectedType, setSelectedType] = useState("");
   return (
     <>
-      <Select>
+      <Select onValueChange={setSelectedType} value={selectedType}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select service" />
         </SelectTrigger>
         <SelectContent>
           {serviceList.map((x, i) => (
-            <SelectItem value={x.title.toLocaleLowerCase().trim()} key={i}>
-              <Image
-                src={x.icon}
-                height={64}
-                width={64}
-                className="size-6"
-                alt="ico"
-              />
-              {x.title}
+            <SelectItem key={i} value={x.title.toLocaleLowerCase().trim()}>
+              <div className="flex items-center gap-2">
+                <Image
+                  src={x.icon}
+                  height={24} // Adjusted size for better inline display
+                  width={24} // Adjusted size for better inline display
+                  className="size-6" // Tailwind class for size, ensure it's applied correctly
+                  alt={x.title}
+                />
+                <span>{x.title}</span>
+              </div>
             </SelectItem>
           ))}
         </SelectContent>
@@ -94,8 +98,13 @@ export default function QuoteForm() {
       </div>
       <Label className="text-lg">Address: </Label>
       <Input type="text" placeholder="Enter your adress" />
-      <Label className="text-lg">Expected Budget: </Label>
-      <Input type="number" placeholder="Enter your budget" />
+      {selectedType === "pool construction" && (
+        <>
+          <Label className="text-lg">Expected Budget: </Label>
+          <Input type="number" placeholder="Enter your budget" />
+        </>
+      )}
+
       <Label className="text-lg" htmlFor="img_up">
         Upload any photos of the issue.
       </Label>
@@ -108,7 +117,7 @@ export default function QuoteForm() {
       </label>
       <input type="file" id="img_up" className="hidden" />
       <Button
-        className="mt-12! w-1/2 mx-auto! block bg-[#003B73]"
+        className="mt-12! w-1/2 mx-auto! flex bg-[#003B73]"
         size="lg"
         asChild
       >

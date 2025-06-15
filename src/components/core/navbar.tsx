@@ -13,6 +13,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { PopoverArrow } from "@radix-ui/react-popover";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export default function Navbar() {
   const path = usePathname();
@@ -129,9 +130,36 @@ export default function Navbar() {
             </PopoverTrigger>
             <PopoverContent className="" align="end">
               <PopoverArrow className="bg-background!" />
-              <h3 className="text-lg text-center font-semibold">
+              <h3 className="text-lg text-center font-semibold border-b pb-2!">
                 Notification
               </h3>
+              <div className="py-4! space-y-4!">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div
+                    className="flex flex-row justify-between items-center gap-2"
+                    key={i}
+                  >
+                    <Avatar className="size-10 border-2 border-white shadow-lg">
+                      <AvatarImage
+                        src={`https://avatar.iran.liara.run/public`}
+                        alt="avatar"
+                      />
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white font-semibold">
+                        UI
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="h-full flex-1 flex flex-row justify-between items-center">
+                      <h4 className="flex items-center gap-2">
+                        L.Messi{" "}
+                        <div className="size-2 rounded-full bg-destructive"></div>
+                      </h4>{" "}
+                      <div className="">
+                        <p className="text-xs">5 mins ago</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </PopoverContent>
           </Popover>
           <Button size="icon" variant="ghost" className="relative">
