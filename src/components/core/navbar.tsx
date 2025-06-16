@@ -116,7 +116,9 @@ export default function Navbar() {
           <Button variant="ghost" asChild>
             <Link href="/get-service">Get Quotes</Link>
           </Button>
-          <Button variant="ghost">My Orders</Button>
+          <Button variant="ghost" asChild>
+            <Link href="/my-orders">My Orders</Link>
+          </Button>
         </div>
         <div className="">
           <Popover>
