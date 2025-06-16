@@ -11,6 +11,7 @@ import Image from "next/image";
 import Features from "./_home/features";
 import MadeSimple from "./_home/made-simple";
 import Testimonials from "./_home/testimonials";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -72,6 +73,81 @@ export default function Home() {
       <Features />
       <MadeSimple />
       <Testimonials />
+      <section>
+        <h1 className="text-3xl text-center font-semibold">
+          Quotes Request Near you
+        </h1>
+        <div className="w-full mt-12! grid grid-cols-3 gap-6">
+          <Card>
+            <CardContent className="flex flex-row gap-4">
+              <Image
+                src="/image/avatar.jpg"
+                height={600}
+                width={250}
+                className="h-48 w-34 rounded-lg object-cover"
+                alt="thumbnail"
+              />
+              <div className="flex-1">
+                <h3 className="text-xl">L. Messi</h3>
+                <p className="text-green-500 text-xl font-semibold">$865.75</p>
+                <p>
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odio
+                  quisquam reiciendis dolorum, blanditiis unde quasi assumenda
+                  doloribus corrupti eveniet vel reprehenderit? Alias blanditiis
+                  sint ab quidem velit expedita ducimus eius!
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="flex flex-row gap-4">
+              <Image
+                src="/image/avatar.jpg"
+                height={600}
+                width={250}
+                className="h-48 w-34 rounded-lg object-cover"
+                alt="thumbnail"
+              />
+              <div className="flex-1">
+                <h3 className="text-xl">L. Messi</h3>
+                <p className="text-green-500 text-xl font-semibold">$865.75</p>
+                <p>
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odio
+                  quisquam reiciendis dolorum, blanditiis unde quasi assumenda
+                  doloribus corrupti eveniet vel reprehenderit? Alias blanditiis
+                  sint ab quidem velit expedita ducimus eius!
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="flex flex-row gap-4">
+              <Image
+                src="/image/avatar.jpg"
+                height={600}
+                width={250}
+                className="h-48 w-34 rounded-lg object-cover"
+                alt="thumbnail"
+              />
+              <div className="flex-1">
+                <h3 className="text-xl">L. Messi</h3>
+                <p className="text-green-500 text-xl font-semibold">$865.75</p>
+                <p>
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odio
+                  quisquam reiciendis dolorum, blanditiis unde quasi assumenda
+                  doloribus corrupti eveniet vel reprehenderit? Alias blanditiis
+                  sint ab quidem velit expedita ducimus eius!
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="flex justify-center items-center">
+          <Button size="lg" className="mt-12! mx-auto!" asChild>
+            <Link href="/browse">See All</Link>
+          </Button>
+        </div>
+      </section>
     </main>
   );
 }

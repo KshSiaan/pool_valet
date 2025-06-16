@@ -164,14 +164,18 @@ export default function Navbar() {
               </div>
             </PopoverContent>
           </Popover>
-          <Button size="icon" variant="ghost" className="relative">
-            <MailIcon />
-            <div className="text-[10px] flex justify-center items-center top-0 right-0 absolute bg-destructive size-4 rounded-full text-background">
-              12
-            </div>
+          <Button size="icon" variant="ghost" className="relative" asChild>
+            <Link href="/chat">
+              <MailIcon />
+              <div className="text-[10px] flex justify-center items-center top-0 right-0 absolute bg-destructive size-4 rounded-full text-background">
+                12
+              </div>
+            </Link>
           </Button>
-          <Button size="icon" variant="ghost">
-            <User2Icon />
+          <Button size="icon" variant="ghost" asChild>
+            <Link href="/profile">
+              <User2Icon />
+            </Link>
           </Button>
         </div>
       </div>

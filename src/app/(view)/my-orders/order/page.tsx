@@ -35,9 +35,30 @@ export default function Page() {
             className="w-full aspect-video object-center object-cover rounded-xl"
             alt="image"
           />
-          <Button className="w-full bg-[#003B73]" size="lg">
-            <Link href="/bids">Check Bidding</Link>
+          <Button className="w-full bg-[#003B73]" size="lg" asChild>
+            <Link href="/my-orders/order/bids">Check Bidding</Link>
           </Button>
+        </div>
+        <div className="mt-12! space-y-4!">
+          <h2 className="text-3xl font-semibold">Payment Info</h2>
+          <p>
+            Your payment will be held securely in escrow and only released after
+            the job is completed.
+          </p>
+          <div className="flex flex-row justify-between items-center">
+            <Button
+              className="bg-red-100 hover:bg-red-200 text-red-500"
+              size="lg"
+            >
+              Cancel Request
+            </Button>
+            <Button
+              className="bg-green-100 hover:bg-green-200 text-green-500"
+              size="lg"
+            >
+              Edit Request
+            </Button>
+          </div>
         </div>
       </div>
     </main>
