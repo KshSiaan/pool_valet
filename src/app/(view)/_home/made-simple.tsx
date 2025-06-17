@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 export default function MadeSimple() {
   return (
     <section className=" text-center mt-12! space-y-3!">
@@ -41,8 +42,10 @@ export default function MadeSimple() {
                 </p>
               </div>
               <div className="flex justify-end items-end h-full">
-                <Button variant="ghost" className="text-background">
-                  Learn more <ArrowRight />
+                <Button variant="ghost" className="text-background" asChild>
+                  <Link href="/get-service">
+                    Learn more <ArrowRight />
+                  </Link>
                 </Button>
               </div>
             </div>

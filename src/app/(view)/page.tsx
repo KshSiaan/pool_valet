@@ -26,8 +26,11 @@ export default function Home() {
             Compare quotes from trusted pros for cleaning, repairs, or new pool
             builds.
           </p>
-          <Button className="text-xl py-6! px-8! bg-[#003B73] hover:bg-[#002873e5]">
-            Get Quotes
+          <Button
+            className="text-xl py-6! px-8! bg-[#003B73] hover:bg-[#002873e5]"
+            asChild
+          >
+            <Link href="/get-service">Get Quotes</Link>
           </Button>
         </div>
       </section>
