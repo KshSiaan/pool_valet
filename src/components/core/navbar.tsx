@@ -172,11 +172,43 @@ export default function Navbar() {
               </div>
             </Link>
           </Button>
-          <Button size="icon" variant="ghost" asChild>
-            <Link href="/profile">
-              <User2Icon />
-            </Link>
-          </Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button size="icon" variant="ghost">
+                <User2Icon />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              side="bottom"
+              align="end"
+              className="w-[500px] bg-primary/50 backdrop-blur-[2px] border-0 shadow-lg shadow-black/50 text-background"
+            >
+              <PopoverArrow />
+              <div className="px-6! space-y-4!">
+                <h1 className="text-center text-2xl">Welcome to Pool Valet</h1>
+                <p className="text-sm text-center text-muted-foreground">
+                  Whether you&apos;re a pool professional offering expert
+                  service or a homeowner seeking trusted care, Pool Valet
+                  connects you with what matters quality, convenience, and peace
+                  of mind.
+                </p>
+                <Button
+                  size="lg"
+                  className="bg-accent-foreground rounded-full w-full"
+                  asChild
+                >
+                  <Link href="/auth">Continue as Home Owner</Link>
+                </Button>
+                <Button
+                  size="lg"
+                  className="bg-background text-foreground rounded-full w-full"
+                  asChild
+                >
+                  <Link href="/auth">Continue as Service Provider</Link>
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </nav>
