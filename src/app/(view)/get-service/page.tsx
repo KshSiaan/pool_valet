@@ -13,7 +13,7 @@ export default function Page() {
     <>
       <Bread />
       <main className="px-8! !py-12">
-        <section className="w-2/3 mx-auto! space-y-6!">
+        <section className="lg:w-2/3 mx-auto! space-y-6!">
           <Card>
             <CardHeader>
               <CardTitle className="text-3xl">

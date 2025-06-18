@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 
 export default function HelpSupport() {
   return (
@@ -144,8 +145,11 @@ export default function HelpSupport() {
                   Chat with our support team in real-time for immediate
                   assistance. Available Monday-Friday, 9am-6pm EST.
                 </CardDescription>
-                <Button className="bg-blue-900 hover:bg-blue-800 text-white !px-8 !py-2 rounded-md">
-                  Start Live Chat
+                <Button
+                  className="bg-blue-900 hover:bg-blue-800 text-white !px-8 !py-2 rounded-md"
+                  asChild
+                >
+                  <Link href="/chat">Start Live Chat</Link>
                 </Button>
               </CardContent>
             </Card>

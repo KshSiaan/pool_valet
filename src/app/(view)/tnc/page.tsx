@@ -2,8 +2,8 @@ import React from "react";
 
 export default function Page() {
   return (
-    <main className="py-12! px-8!">
-      <section className="w-2/3 mx-auto! space-y-8! text-center">
+    <main className="py-12! px-2! lg:px-8!">
+      <section className="lg:w-2/3 mx-auto! space-y-8! lg:text-center">
         <h1 className="text-4xl font-bold">Terms & Conditions</h1>
         <div className="w-full">
           <h3 className="text-xl font-semibold">

@@ -29,10 +29,10 @@ export default function Page() {
   return (
     <>
       <Bread />
-      <main className="px-8! py-12!">
-        <Card className="w-2/3 mx-auto!">
+      <main className="px-2! lg:px-8! py-12!">
+        <Card className="lg:w-2/3 mx-auto!">
           <CardHeader>
-            <CardTitle className="text-2xl text-accent-foreground">
+            <CardTitle className="text-2xl text-accent-foreground text-center lg:text-start">
               My orders
             </CardTitle>
           </CardHeader>

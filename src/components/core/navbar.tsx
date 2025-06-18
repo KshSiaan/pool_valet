@@ -1,25 +1,40 @@
 "use client";
+
 import {
   BellIcon,
   Clock2Icon,
   MailIcon,
   MapPin,
   User2Icon,
+  Menu,
 } from "lucide-react";
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
-import { Button } from "../ui/button";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { PopoverArrow } from "@radix-ui/react-popover";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
-export default function Navbar() {
+export default function ResponsiveNavbar() {
   const path = usePathname();
   const navig = useRouter();
-  const shouldScroll = useRef(false); // ✅ useRef instead of state
+  const shouldScroll = useRef(false);
   const [scrollTo, setScrollTo] = useState("hiw");
+  const [isOpen, setIsOpen] = useState(false);
+
   function scroller(x: string) {
     if (x === "hiw") {
       window.scrollBy({
@@ -41,10 +56,11 @@ export default function Navbar() {
 
   const handleScroll = (x: string) => {
     setScrollTo(x);
+    setIsOpen(false); // Close mobile menu
     if (path === "/") {
       scroller(x);
     } else {
-      shouldScroll.current = true; // 👈 mark that we want to scroll after nav
+      shouldScroll.current = true;
       navig.push("/");
     }
   };
@@ -52,111 +68,127 @@ export default function Navbar() {
   useEffect(() => {
     if (shouldScroll.current && path === "/") {
       scroller(scrollTo);
-      shouldScroll.current = false; // ✅ reset flag
+      shouldScroll.current = false;
     }
   }, [path]);
 
+  const NavigationButtons = () => (
+    <>
+      <Button variant="ghost" asChild>
+        <Link href="/" onClick={() => setIsOpen(false)}>
+          Home
+        </Link>
+      </Button>
+      <Button variant="ghost" onClick={() => handleScroll("hiw")}>
+        How It Works
+      </Button>
+      <Button variant="ghost" onClick={() => handleScroll("fh")}>
+        For Homeowners
+      </Button>
+      <Button variant="ghost" onClick={() => handleScroll("fp")}>
+        For Providers
+      </Button>
+      <Button variant="ghost" asChild>
+        <Link href="/get-service" onClick={() => setIsOpen(false)}>
+          Get Quotes
+        </Link>
+      </Button>
+      <Button variant="ghost" asChild>
+        <Link href="/my-orders" onClick={() => setIsOpen(false)}>
+          My Orders
+        </Link>
+      </Button>
+    </>
+  );
+
   return (
     <nav className="">
-      <div className="!py-2 w-full bg-blue-100 flex flex-row justify-between items-center px-8!">
-        <div className="flex gap-1 text-sm items-center">
-          <MapPin className="size-5" fill="#33628F" stroke="#dbeafe" />
-          8494 Signal Hill Road Manassas, Va
-        </div>
-        <div className="flex items-center gap-1 text-sm">
-          <Clock2Icon className="size-4 text-[#33628F]" />
-          <span>Working Time:</span>{" "}
-          <span className="text-[#33628F]">
-            24 Hour Service - 7 Days a Week
-          </span>
-        </div>
-        <div className="text-[#33628F] text-sm flex items-center gap-2">
-          <MailIcon className="size-4" />
-          info@poolvalet.com
+      {/* Top contact bar - responsive */}
+      <div className="py-2! w-full bg-blue-100 px-4! md:px-8">
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-2 lg:gap-0">
+          <div className="flex gap-1 text-xs md:text-sm items-center justify-center lg:justify-start">
+            <MapPin
+              className="size-4 md:size-5 flex-shrink-0"
+              fill="#33628F"
+              stroke="#dbeafe"
+            />
+            <span className="truncate">8494 Signal Hill Road Manassas, Va</span>
+          </div>
+          <div className="hidden md:flex items-center gap-1 text-xs md:text-sm justify-center">
+            <Clock2Icon className="size-4 text-[#33628F] flex-shrink-0" />
+            <span>Working Time:</span>
+            <span className="text-[#33628F]">
+              24 Hour Service - 7 Days a Week
+            </span>
+          </div>
+          <div className="text-[#33628F] text-xs md:text-sm flex items-center gap-2 justify-center lg:justify-end">
+            <MailIcon className="size-4 flex-shrink-0" />
+            <span className="truncate">info@poolvalet.com</span>
+          </div>
         </div>
       </div>
-      <div className="py-4! px-8! flex flex-row justify-between items-center">
-        <div className="">
+
+      {/* Main navigation bar - responsive */}
+      <div className="py-4! px-4! md:px-8! flex flex-row justify-between items-center">
+        {/* Logo */}
+        <div className="flex-shrink-0">
           <Image
-            src="/cropped-icon.png"
-            height={1024}
-            width={1024}
-            className="w-[100px]"
-            alt="icon"
+            src="/icon.png"
+            height={80}
+            width={80}
+            className="w-[60px] md:w-[80px] lg:w-[100px]"
+            alt="Pool Valet Logo"
           />
         </div>
-        <div className="flex gap-2">
-          <Button variant="ghost" asChild>
-            <Link href="/">Home</Link>
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              handleScroll("hiw");
-            }}
-          >
-            How It Works
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              handleScroll("fh");
-            }}
-          >
-            For Homeowners
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              handleScroll("fp");
-            }}
-          >
-            For Providers
-          </Button>
-          <Button variant="ghost" asChild>
-            <Link href="/get-service">Get Quotes</Link>
-          </Button>
-          <Button variant="ghost" asChild>
-            <Link href="/my-orders">My Orders</Link>
-          </Button>
+
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex gap-2">
+          <NavigationButtons />
         </div>
-        <div className="">
+
+        {/* Right side actions */}
+        <div className="flex items-center gap-1 md:gap-2">
+          {/* Mobile menu trigger */}
+
+          {/* Notifications */}
           <Popover>
             <PopoverTrigger asChild>
               <Button size="icon" variant="ghost" className="relative">
-                <BellIcon />
+                <BellIcon className="h-4 w-4 md:h-5 md:w-5" />
                 <div className="text-[10px] flex justify-center items-center top-0 right-0 absolute bg-destructive size-4 rounded-full text-background">
                   3
                 </div>
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="" align="end">
-              <PopoverArrow className="bg-background!" />
+            <PopoverContent className="lg:w-80" align="end">
+              <PopoverArrow className="bg-background" />
               <h3 className="text-lg text-center font-semibold border-b pb-2!">
-                Notification
+                Notifications
               </h3>
-              <div className="py-4! space-y-4!">
+              <div className="py-4! space-y-4! max-h-96 overflow-y-auto">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <div
                     className="flex flex-row justify-between items-center gap-2"
                     key={i}
                   >
-                    <Avatar className="size-10 border-2 border-white shadow-lg">
+                    <Avatar className="size-10 border-2 border-white shadow-lg flex-shrink-0">
                       <AvatarImage
-                        src={`https://avatar.iran.liara.run/public`}
+                        src={`/placeholder.svg?height=40&width=40`}
                         alt="avatar"
                       />
                       <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white font-semibold">
                         UI
                       </AvatarFallback>
                     </Avatar>
-                    <div className="h-full flex-1 flex flex-row justify-between items-center">
-                      <h4 className="flex items-center gap-2">
-                        L.Messi{" "}
-                        <div className="size-2 rounded-full bg-destructive"></div>
-                      </h4>{" "}
-                      <div className="">
-                        <p className="text-xs">5 mins ago</p>
+                    <div className="h-full flex-1 flex flex-row justify-between items-center min-w-0">
+                      <h4 className="flex items-center gap-2 truncate">
+                        L.Messi
+                        <div className="size-2 rounded-full bg-destructive flex-shrink-0"></div>
+                      </h4>
+                      <div className="flex-shrink-0">
+                        <p className="text-xs text-muted-foreground">
+                          5 mins ago
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -164,28 +196,34 @@ export default function Navbar() {
               </div>
             </PopoverContent>
           </Popover>
+
+          {/* Messages */}
           <Button size="icon" variant="ghost" className="relative" asChild>
             <Link href="/chat">
-              <MailIcon />
+              <MailIcon className="h-4 w-4 md:h-5 md:w-5" />
               <div className="text-[10px] flex justify-center items-center top-0 right-0 absolute bg-destructive size-4 rounded-full text-background">
                 12
               </div>
             </Link>
           </Button>
+
+          {/* User menu */}
           <Popover>
             <PopoverTrigger asChild>
               <Button size="icon" variant="ghost">
-                <User2Icon />
+                <User2Icon className="h-4 w-4 md:h-5 md:w-5" />
               </Button>
             </PopoverTrigger>
             <PopoverContent
               side="bottom"
               align="end"
-              className="w-[500px] bg-primary/50 backdrop-blur-[2px] border-0 shadow-lg shadow-black/50 text-background"
+              className="w-[300px] sm:w-[400px] md:w-[500px] bg-primary/50 backdrop-blur-[2px] border-0 shadow-lg shadow-black/50 text-background"
             >
               <PopoverArrow />
-              <div className="px-6! space-y-4!">
-                <h1 className="text-center text-2xl">Welcome to Pool Valet</h1>
+              <div className="px-4! md:px-6! space-y-4!">
+                <h1 className="text-center text-xl md:text-2xl">
+                  Welcome to Pool Valet
+                </h1>
                 <p className="text-sm text-center text-muted-foreground">
                   Whether you&apos;re a pool professional offering expert
                   service or a homeowner seeking trusted care, Pool Valet
@@ -209,6 +247,23 @@ export default function Navbar() {
               </div>
             </PopoverContent>
           </Popover>
+
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button size="icon" variant="ghost" className="lg:hidden">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle navigation menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+              <SheetHeader>
+                <SheetTitle className="text-left"></SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col gap-4 mt-6!">
+                <NavigationButtons />
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </nav>

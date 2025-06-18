@@ -12,9 +12,9 @@ import React from "react";
 
 export default function Page() {
   return (
-    <main className="h-[80dvh] my-6! px-8!">
-      <div className="w-full h-full grid grid-cols-7 gap-6">
-        <div className="h-full col-span-2 border rounded-lg bg-accent-foreground/5">
+    <main className="lg:h-[80dvh] my-6! px-2! lg:px-8!">
+      <div className="w-full h-full grid lg:grid-cols-7 gap-6">
+        <div className="h-full lg:col-span-2 border rounded-lg bg-accent-foreground/5">
           <div className="!p-4">
             <h3 className="text-2xl mb-3!">Chats</h3>
             <Input
@@ -48,7 +48,7 @@ export default function Page() {
             </div>
           ))}
         </div>
-        <div className="h-full col-span-5 border rounded-lg flex flex-col justify-between items-start bg-accent-foreground/5">
+        <div className="h-dvh lg:h-full lg:col-span-5 border rounded-lg flex flex-col justify-between items-start bg-accent-foreground/5">
           <div className="flex flex-row justify-start items-center gap-3 !px-4 !py-3 border-b w-full">
             <Avatar className="!size-12">
               <AvatarImage src="https://avatar.iran.liara.run/public" />

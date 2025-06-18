@@ -38,4 +38,5 @@ export default function Bread() {
 const relatives = [
   { path: "/top-providers", label: "Top Providers" },
   { path: "/get-service", label: "Service categories" },
+  { path: "/my-orders", label: "My orders" },
 ];

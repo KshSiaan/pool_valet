@@ -112,7 +112,7 @@ const FeaturedTestimonial = ({ testimonial }: { testimonial: Testimonial }) => (
   <Card className="h-full bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
     <CardContent className="p-8! h-full flex flex-col justify-center">
       <Quote className="size-8 text-blue-500 mb-4!" />
-      <blockquote className="text-lg leading-relaxed mb-6! text-gray-700">
+      <blockquote className="lg:text-lg leading-relaxed mb-6! text-gray-700">
         &quot;{testimonial.content}&quot;
       </blockquote>
       <div className="flex items-center gap-2 mb-4!">
@@ -151,10 +151,10 @@ export default function Testimonials() {
         <h4 className="text-accent-foreground font-semibold text-sm uppercase tracking-wide">
           Testimonials
         </h4>
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+        <h2 className="text-2xl lg:text-4xl md:text-5xl font-bold text-gray-900">
           Our Satisfied Customers
         </h2>
-        <p className="text-gray-600 text-lg max-w-3xl !mx-auto leading-relaxed">
+        <p className="text-gray-600 text-sm lg:text-lg max-w-3xl !mx-auto leading-relaxed">
           We know that finding someone to take care of your pool can be a
           daunting process. Let Premier Pool Service take care of your pool
           servicing and you won&apos;t have to have those worries again.

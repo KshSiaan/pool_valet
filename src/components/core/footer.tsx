@@ -26,8 +26,8 @@ export default function Footer() {
       <div className="space-y-3! flex flex-col">
         <h3 className="text-lg font-bold text-[#003B73]">Quick Links</h3>
         <Link href="/">Home</Link>
-        <Link href="/how-it-works">How it works</Link>
-        <Link href="/contact">Contact</Link>
+        <Link href="/">How it works</Link>
+        <Link href="/help">Contact</Link>
       </div>
 
       <div className="space-y-3! flex flex-col">

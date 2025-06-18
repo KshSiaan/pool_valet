@@ -15,12 +15,12 @@ export default function MadeSimple() {
       <h4 className="text-accent-foreground font-semibold">
         Professional pool care solutions for every type of property
       </h4>
-      <div className="grid grid-cols-2 gap-6 w-full mt-12!">
-        <div className="flex flex-col justify-between h-full gap-6">
+      <div className="grid lg:grid-cols-2 gap-6 w-full mt-12!">
+        <div className="flex flex-col justify-between h-full gap-6 order-2 lg:order-1">
           {list.map((x, i) => (
             <div
               key={i}
-              className="flex flex-row justify-between items-start border rounded-r-lg flex-1 p-3! rounded-lg bg-gradient-to-r from-[#33628F] to-[#8AA5BF] gap-6"
+              className="flex flex-col lg:flex-row justify-between items-start border rounded-r-lg flex-1 p-3! rounded-lg bg-gradient-to-r from-[#33628F] to-[#8AA5BF] gap-6"
             >
               <div className="">
                 <div className="rounded-full size-12 border bg-background flex justify-center items-center">
@@ -56,7 +56,7 @@ export default function MadeSimple() {
             width="600"
             height="600"
             preload="auto"
-            className="w-full rounded-lg"
+            className="w-full rounded-lg order-1 lg:order-2"
             autoPlay
             muted
             loop
