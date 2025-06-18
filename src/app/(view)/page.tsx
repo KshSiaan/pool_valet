@@ -27,7 +27,7 @@ export default function Home() {
             builds.
           </p>
           <Button
-            className="w-full lg:w-auto lg:text-xl py-6! px-8! bg-[#003B73] hover:bg-[#002873e5]"
+            className="w-full sm:w-auto lg:text-xl py-6! px-8! bg-[#003B73] hover:bg-[#002873e5]"
             asChild
           >
             <Link href="/get-service">Get Quotes</Link>

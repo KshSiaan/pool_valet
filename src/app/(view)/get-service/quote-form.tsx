@@ -140,10 +140,10 @@ const serviceList = [
     icon: "/icon/swimming-pool.svg",
     title: "Pool Construction",
   },
-  {
-    icon: "/icon/pump.svg",
-    title: "Filter & Pump Issue",
-  },
+  // {
+  //   icon: "/icon/pump.svg",
+  //   title: "Filter & Pump Issue",
+  // },
   {
     icon: "/icon/farm-house.svg",
     title: "Pool Inspection",
