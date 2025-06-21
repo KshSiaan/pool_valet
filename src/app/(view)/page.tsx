@@ -43,12 +43,12 @@ export default function Home() {
               desc: "Tell us what you need with our simple form",
             },
             {
-              title: "Book + Pay Securely",
-              desc: "Schedule and pay with confidence",
-            },
-            {
               title: "Get & Compare Quotes",
               desc: "Receive multiple quotes from verified pros",
+            },
+            {
+              title: "Book + Pay Securely",
+              desc: "Schedule and pay with confidence",
             },
           ].map((x, i) => (
             <Card key={i}>
