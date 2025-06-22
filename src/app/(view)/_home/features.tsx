@@ -54,7 +54,7 @@ export default function Features() {
               {/* Background image with subtle blur and low opacity */}
               <div className="lg:col-span-1">
                 <Image
-                  src="/image/header-bg.jpg"
+                  src="/image/sac.jpg"
                   alt="Background"
                   width={600}
                   height={600}
@@ -65,7 +65,7 @@ export default function Features() {
               {/* Middle image with medium opacity and blur */}
               <div className="lg:col-span-3">
                 <Image
-                  src="/image/header-bg.jpg"
+                  src="/image/sab.jpg"
                   alt="Decorative"
                   width={600}
                   height={600}
@@ -76,7 +76,7 @@ export default function Features() {
               {/* Foreground image with full visibility */}
               <div className="lg:col-span-3">
                 <Image
-                  src="/image/header-bg.jpg"
+                  src="/image/saa.png"
                   alt="Foreground"
                   width={600}
                   height={600}
@@ -131,7 +131,7 @@ export default function Features() {
               {/* Foreground image with full visibility */}
               <div className="col-span-3 hidden lg:block">
                 <Image
-                  src="/image/header-bg.jpg"
+                  src="/image/sba.png"
                   alt="Foreground"
                   width={600}
                   height={600}
@@ -142,7 +142,7 @@ export default function Features() {
               {/* Middle image with medium opacity and blur */}
               <div className="col-span-3">
                 <Image
-                  src="/image/header-bg.jpg"
+                  src="/image/sbb.jpg"
                   alt="Decorative"
                   width={600}
                   height={600}
@@ -152,7 +152,7 @@ export default function Features() {
               {/* Background image with subtle blur and low opacity */}
               <div className="col-span-1 hidden lg:block">
                 <Image
-                  src="/image/header-bg.jpg"
+                  src="/image/sbc.jpg"
                   alt="Background"
                   width={600}
                   height={600}

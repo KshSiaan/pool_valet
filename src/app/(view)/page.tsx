@@ -40,21 +40,24 @@ export default function Home() {
           {[
             {
               title: "Submit Request",
+              img: "/image/aa.jpg",
               desc: "Tell us what you need with our simple form",
             },
             {
               title: "Get & Compare Quotes",
+              img: "/image/bb.jpg",
               desc: "Receive multiple quotes from verified pros",
             },
             {
               title: "Book + Pay Securely",
+              img: "/image/cc.jpg",
               desc: "Schedule and pay with confidence",
             },
           ].map((x, i) => (
             <Card key={i}>
               <CardHeader>
                 <Image
-                  src="/image/header-bg.jpg"
+                  src={x.img}
                   height={600}
                   width={600}
                   className="w-full rounded-lg aspect-[5/4] object-cover object-center"

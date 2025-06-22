@@ -20,7 +20,7 @@ export default function MadeSimple() {
           {list.map((x, i) => (
             <div
               key={i}
-              className="flex flex-col lg:flex-row justify-between items-start border rounded-r-lg flex-1 p-3! rounded-lg bg-gradient-to-r from-[#33628F] to-[#8AA5BF] gap-6"
+              className="flex flex-col lg:flex-row justify-between items-start border rounded-r-lg flex-1 p-3! rounded-lg bg-gradient-to-r from-[#33628F] to-[#8AA5BF] hover:from-[#224363] hover:to-[#33628F] gap-6 transition-colors"
             >
               <div className="">
                 <div className="rounded-full size-12 border bg-background flex justify-center items-center">
