@@ -235,14 +235,16 @@ export default function ResponsiveNavbar() {
                   className="bg-accent-foreground rounded-full w-full"
                   asChild
                 >
-                  <Link href="/auth">Continue as Home Owner</Link>
+                  <Link href={`/auth?as=user`}>Continue as Home Owner</Link>
                 </Button>
                 <Button
                   size="lg"
                   className="bg-background text-foreground rounded-full w-full"
                   asChild
                 >
-                  <Link href="/auth">Continue as Service Provider</Link>
+                  <Link href="/auth?as=provider">
+                    Continue as Service Provider
+                  </Link>
                 </Button>
               </div>
             </PopoverContent>
