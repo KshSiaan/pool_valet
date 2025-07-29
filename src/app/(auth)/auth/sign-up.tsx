@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -18,6 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import howl from "@/lib/howl";
+import { useRouter } from "next/navigation";
 
 const signUpSchema = z
   .object({
@@ -37,7 +39,7 @@ const signUpSchema = z
 export default function SignUp({ as }: { as: string }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const navig = useRouter();
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -52,18 +54,21 @@ export default function SignUp({ as }: { as: string }) {
   const onSubmit = async (dataset: z.infer<typeof signUpSchema>) => {
     try {
       const data = {
-        role: as,
+        role: as === "user" ? 1 : 2,
         full_name: dataset.name,
         email: dataset.email,
         password: dataset.password,
         password_confirmation: dataset.confirmPassword,
       };
-      //   const call = await howl({ link: "/register", method: "post", data });
-      //   console.log(call);
+      const call: any = await howl({ link: "/register", method: "post", data });
+      console.log(call);
 
-      //   if (!call) {
-
-      //   }
+      if (!call.status) {
+        toast.error(call.message ?? "Failed to Log in");
+      } else {
+        toast.success(call.message ?? "Successfully Logged in");
+        navig.push("/otp");
+      }
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong");

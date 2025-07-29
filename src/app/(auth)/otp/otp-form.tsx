@@ -1,61 +1,98 @@
 "use client";
 
-import type React from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 
-// import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { toast } from "sonner";
+import howl from "@/lib/howl";
+
+const verificationSchema = z.object({
+  code: z.string().min(6, "Code must be at least 6 characters"),
+});
 
 export default function AuthForms() {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Sign in submitted");
+  const form = useForm<z.infer<typeof verificationSchema>>({
+    resolver: zodResolver(verificationSchema),
+    defaultValues: {
+      code: "",
+    },
+  });
+
+  const onSubmit = async (data: z.infer<typeof verificationSchema>) => {
+    console.log("Submitted Code:", data.code);
+
+    try {
+      const call = await howl({
+        link: "/verify-otp",
+        method: "post",
+        data: { otp: data.code },
+      });
+      console.log(call);
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+    }
   };
+
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center !p-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="!p-8">
-          <h1 className="text-2xl font-semibold mb-6! text-center">
+        <div className="p-8">
+          <h1 className="text-2xl font-semibold mb-6 text-center">
             Verify Your Email Address
           </h1>
-          <p className="text-center mb-6! text-sm text-muted-foreground">
-            Duis sagittis molestie tellus, at eleifend sapien pellque quis.
+          <p className="text-center mb-6 text-sm text-muted-foreground">
+            Duis sagittis molestie tellus, at eleifend sapien pellentesque quis.
             Fusce lorem nunc, fringilla sit amet nunc.
           </p>
-          <form onSubmit={handleSubmit} className="!space-y-6">
-            <div className="!space-y-2">
-              <div className="flex justify-between items-center">
-                <Label
-                  htmlFor="signin-password"
-                  className="text-sm font-medium text-gray-700"
-                >
-                  Verification code
-                </Label>
-                <Button
-                  className="text-sm text-accent-foreground hover:text-accent-foreground/80 font-medium"
-                  variant="link"
-                >
-                  Resend code
-                </Button>
-              </div>
-              <Input
-                id="signin-email"
-                type="email"
-                className="w-full !px-3 !py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              />
-            </div>
 
-            <Button
-              type="submit"
-              className="w-full bg-accent-foreground text-white font-medium !py-3 px-4 rounded-md transition-colors"
-              asChild
-            >
-              <Link href="/reset">VERIFY CODE</Link>
-            </Button>
-          </form>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="code"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex justify-between items-center mb-1">
+                      <FormLabel>Verification Code</FormLabel>
+                      <Button
+                        type="button"
+                        variant="link"
+                        className="text-sm font-medium"
+                      >
+                        Resend code
+                      </Button>
+                    </div>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Enter verification code"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full py-3">
+                VERIFY CODE
+              </Button>
+            </form>
+          </Form>
         </div>
       </div>
     </div>

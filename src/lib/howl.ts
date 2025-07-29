@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BASE_API_ENDPOINT } from "./config/data";
 
 interface Howl {
@@ -67,6 +68,7 @@ const options = {
   },
 };
 
+
 export default async function howl({
   link,
   method = "get",
@@ -81,52 +83,93 @@ export default async function howl({
   reffererPolicy = "strict-origin-when-cross-origin",
   integrity = "",
 }: Howl) {
+  if (!link) {
+    const err = new Error("Missing required 'link' parameter.");
+    console.error(err);
+    throw err; // fail fast for missing essential param
+  }
+
+  const headers: HeadersInit = {
+    "Content-Type": options.type[content],
+  };
+
+  if (token) {
+    headers["Authorization"] = `${options.auth[auth]} ${token}`;
+  }
+
+  let body: BodyInit | null = null;
+  if (data) {
+    body = content === "json" ? JSON.stringify(data) : data;
+  }
+
+  const requestConfig: RequestInit = {
+    method: method.toUpperCase(),
+    mode,
+    cache,
+    credentials,
+    redirect,
+    referrerPolicy: reffererPolicy,
+    integrity,
+    headers,
+    body,
+  };
+
   try {
-    // Validate the method and content type
-    if (!link) throw new Error("Missing required 'link' parameter.");
-
-    // Prepare headers
-    const headers: HeadersInit = {
-      "Content-Type": options.type[content],
-    };
-
-    // Add Authorization header if token is present
-    if (token) {
-      headers["Authorization"] = `${options.auth[auth]} ${token}`;
-    }
-
-    // Prepare the body
-    let body: BodyInit | null = null;
-    if (data) {
-      body = content === "json" ? JSON.stringify(data) : data;
-    }
-
-    // Make the request using fetch
-    const call = await fetch(`${BASE_API_ENDPOINT + link}`, {
-      method: method.toUpperCase(),
-      mode,
-      cache,
-      credentials,
-      redirect,
-      referrerPolicy: reffererPolicy,
-      integrity,
-      headers,
-      body,
+    console.debug("🐺 howl request config:", {
+      url: BASE_API_ENDPOINT + link,
+      requestConfig,
     });
 
-    // // Check if the response is successful (status 200-299)
-    // if (!call.ok) {
-    //   throw new Error(
-    //     `Request failed with status ${call.status}: ${call.statusText}`
-    //   );
-    // }
+    const response = await fetch(BASE_API_ENDPOINT + link, requestConfig);
 
-    // Parse the JSON response
-    return await call.json();
+    const contentType = response.headers.get("Content-Type") || "";
+
+    let responseData: unknown = null;
+    try {
+      // try to parse response based on content-type
+      if (contentType.includes("application/json")) {
+        responseData = await response.json();
+      } else if (
+        contentType.includes("text/") ||
+        contentType.includes("application/xml") ||
+        contentType.includes("html")
+      ) {
+        responseData = await response.text();
+      } else {
+        responseData = await response.blob();
+      }
+    } catch (parseErr) {
+      console.warn("⚠️ Failed to parse response body:", parseErr);
+    }
+
+    if (!response.ok) {
+      const error = new Error(
+        `HTTP Error: ${response.status} ${response.statusText}`
+      ) as any;
+
+      error.status = response.status;
+      error.statusText = response.statusText;
+      error.responseData = responseData;
+      console.error("❌ howl HTTP error:", error);
+      throw error;
+    }
+
+    console.debug("✅ howl response data:", responseData);
+    return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Error during request:", error.message);
-      return error; // Return a JSON object with the error message
+      console.error("🔥 howl error caught:", error);
+      // wrap in consistent error object for caller
+      return {
+        success: false,
+        message: error.message,
+        ...(error as any).status ? { status: (error as any).status } : {},
+        ...(error as any).statusText ? { statusText: (error as any).statusText } : {},
+        ...(error as any).responseData ? { responseData: (error as any).responseData } : {},
+      };
+    } else {
+      console.error("🔥 howl unknown error caught:", error);
+      return { success: false, message: "Unknown error occurred" };
     }
   }
 }
