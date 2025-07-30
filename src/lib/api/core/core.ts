@@ -1,0 +1,48 @@
+import howl from "@/lib/howl";
+interface ServiceRequest {
+  service: string;
+  describe_issue: string;
+  property_type: 'family' | 'commercial' | string;
+  service_type: 'pool' | 'spa' | 'pool and spa' | string;
+  pool_depth: number;
+  date: string; // ISO date or "MM/DD/YYYY"
+  time: string; // "HH:MM" 24hr format
+  zip_code: string;
+  address: string;
+  expected_budget: number;
+}
+export const getQuoteApi = async(token:string) => {
+  return await howl({link:"/user/get-quotes",token})
+};
+
+export const createQuoteApi  = async(data:ServiceRequest,token:string) => {
+  return await howl({link:"/user/create-quote",method:"post",data,token})
+};
+
+export const getQuotesApi = async(status:"Pending"| "In progress" |"Completed",token:string) => {
+  return await howl({link:`/user/get-my-quotes?status=${status}`,token})
+};
+
+export const viewQuoteApi = async(id:string|number,token:string) => {
+  return await howl({link:`/user/view-quote/${id}`,token})
+};
+
+export const deleteQuoteApi = async(id:string|number,token:string) => {
+  return await howl({link:`/user/delete-quote/${id}`,token})
+};
+
+export const getCheckBidsApi = async(token:string) => {
+  return await howl({link:`/user/get-check-bids`,token})
+};
+
+export const getAcceptedBidsApi = async(token:string) => {
+  return await howl({link:`/user/get-accepted-bids`,token})
+};
+
+export const acceptedBidApi = async(id:string|number,token:string) => {
+  return await howl({link:`/user/accept-request?bid_id=${id}`,method:"patch",token})
+};
+
+export const cancelOrderApi = async(id:string|number,token:string) => {
+  return await howl({link:`/user/cancel-order?quote_id=${id}`,token})
+};

@@ -27,6 +27,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useCookies } from "react-cookie";
+import { useQuery } from "@tanstack/react-query";
+import { getProfileApi } from "@/lib/api/auth/auth";
 
 export default function ResponsiveNavbar() {
   const path = usePathname();
@@ -34,6 +37,15 @@ export default function ResponsiveNavbar() {
   const shouldScroll = useRef(false);
   const [scrollTo, setScrollTo] = useState("hiw");
   const [isOpen, setIsOpen] = useState(false);
+  const [cookies] = useCookies(["ghost"]);
+  const { data, isPending } = useQuery({
+    queryKey: ["profile"],
+    queryFn: () => getProfileApi(cookies.ghost),
+    enabled: !!cookies.ghost,
+  });
+  if (!isPending) {
+    console.log(data.data);
+  }
 
   function scroller(x: string) {
     if (x === "hiw") {
@@ -207,7 +219,6 @@ export default function ResponsiveNavbar() {
             </Link>
           </Button>
 
-          {/* User menu */}
           <Popover>
             <PopoverTrigger asChild>
               <Button size="icon" variant="ghost">
@@ -220,33 +231,47 @@ export default function ResponsiveNavbar() {
               className="w-[300px] sm:w-[400px] md:w-[500px] bg-primary/50 backdrop-blur-[2px] border-0 shadow-lg shadow-black/50 text-background"
             >
               <PopoverArrow />
-              <div className="px-4! md:px-6! space-y-4!">
-                <h1 className="text-center text-xl md:text-2xl">
-                  Welcome to Pool Valet
-                </h1>
-                <p className="text-sm text-center text-muted-foreground">
-                  Whether you&apos;re a pool professional offering expert
-                  service or a homeowner seeking trusted care, Pool Valet
-                  connects you with what matters quality, convenience, and peace
-                  of mind.
-                </p>
-                <Button
-                  size="lg"
-                  className="bg-accent-foreground rounded-full w-full"
-                  asChild
-                >
-                  <Link href={`/auth?as=user`}>Continue as Home Owner</Link>
-                </Button>
-                <Button
-                  size="lg"
-                  className="bg-background text-foreground rounded-full w-full"
-                  asChild
-                >
-                  <Link href="/auth?as=provider">
-                    Continue as Service Provider
-                  </Link>
-                </Button>
-              </div>
+              {cookies.ghost ? (
+                <>
+                  <div className="px-4! md:px-6! space-y-4!">
+                    {isPending && (
+                      <pre className="bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-amber-400 rounded-xl p-6 shadow-lg overflow-x-auto text-sm leading-relaxed border border-zinc-700">
+                        <code className="whitespace-pre-wrap">
+                          {JSON.stringify(data, null, 2)}
+                        </code>
+                      </pre>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="px-4! md:px-6! space-y-4!">
+                  <h1 className="text-center text-xl md:text-2xl">
+                    Welcome to Pool Valet
+                  </h1>
+                  <p className="text-sm text-center text-muted-foreground">
+                    Whether you&apos;re a pool professional offering expert
+                    service or a homeowner seeking trusted care, Pool Valet
+                    connects you with what matters quality, convenience, and
+                    peace of mind.
+                  </p>
+                  <Button
+                    size="lg"
+                    className="bg-accent-foreground rounded-full w-full"
+                    asChild
+                  >
+                    <Link href={`/auth?as=user`}>Continue as Home Owner</Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    className="bg-background text-foreground rounded-full w-full"
+                    asChild
+                  >
+                    <Link href="/auth?as=provider">
+                      Continue as Service Provider
+                    </Link>
+                  </Button>
+                </div>
+              )}
             </PopoverContent>
           </Popover>
 

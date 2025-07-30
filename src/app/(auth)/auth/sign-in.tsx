@@ -13,10 +13,16 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, EyeIcon, EyeOffIcon } from "lucide-react";
+import { ArrowRight, EyeIcon, EyeOffIcon, Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { siApple } from "simple-icons";
+import { useMutation } from "@tanstack/react-query";
+import { loginApi } from "@/lib/api/auth/auth";
+import { toast } from "sonner";
+import { AnyType } from "@/lib/config/error-type";
+import { useCookies } from "react-cookie";
+import { useRouter } from "next/navigation";
 
 // Schema
 const signInSchema = z.object({
@@ -26,7 +32,9 @@ const signInSchema = z.object({
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const { mutate: login, isPending } = useMutation({ mutationFn: loginApi });
+  const [, setCookie] = useCookies(["ghost"]);
+  const navig = useRouter();
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -35,8 +43,23 @@ export default function SignIn() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof signInSchema>) => {
-    console.log("Form Data:", data);
+  const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    login(data, {
+      onSuccess: (res: AnyType) => {
+        console.log(res);
+        toast.success(res.message ?? "Login Success");
+        try {
+          setCookie("ghost", res.token);
+          navig.push("/");
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to set Cookie");
+        }
+      },
+      onError: (error: AnyType) => {
+        toast.error(error.data.message ?? "Login failed");
+      },
+    });
   };
 
   return (
@@ -107,9 +130,16 @@ export default function SignIn() {
 
           <Button
             type="submit"
+            disabled={isPending}
             className="w-full bg-accent-foreground text-white font-medium !py-3 px-4 rounded-md transition-colors"
           >
-            SIGN IN <ArrowRight />
+            {isPending ? (
+              <Loader2Icon className="animate-spin" />
+            ) : (
+              <>
+                SIGN IN <ArrowRight />
+              </>
+            )}
           </Button>
 
           <div className="relative">

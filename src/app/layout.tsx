@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-
+import Provider from "@/lib/provider/provider";
 const roboto = Roboto({
   subsets: ["latin"],
   weight: "variable", // enables all weights
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.variable} font-roboto antialiased`}>
-        {children}
+        <Provider>{children}</Provider>
         <Toaster richColors />
       </body>
     </html>
