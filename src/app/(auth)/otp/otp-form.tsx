@@ -16,12 +16,17 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import howl from "@/lib/howl";
+import { useCookies } from "react-cookie";
+import { AnyType } from "@/lib/config/error-type";
+import { useRouter } from "next/navigation";
 
 const verificationSchema = z.object({
   code: z.string().min(6, "Code must be at least 6 characters"),
 });
 
 export default function AuthForms() {
+  const [, setCookie] = useCookies(["ghost"]);
+  const navig = useRouter();
   const form = useForm<z.infer<typeof verificationSchema>>({
     resolver: zodResolver(verificationSchema),
     defaultValues: {
@@ -30,15 +35,18 @@ export default function AuthForms() {
   });
 
   const onSubmit = async (data: z.infer<typeof verificationSchema>) => {
-    console.log("Submitted Code:", data.code);
-
     try {
-      const call = await howl({
+      const call: AnyType = await howl({
         link: "/verify-otp",
         method: "post",
         data: { otp: data.code },
       });
-      console.log(call);
+      if (!call.status) {
+        toast.error(call.message);
+      } else {
+        setCookie("ghost", call.access_token);
+        navig.push("/");
+      }
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong");

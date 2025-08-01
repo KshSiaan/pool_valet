@@ -16,14 +16,12 @@ import { Input } from "@/components/ui/input";
 import { ArrowRight, EyeIcon, EyeOffIcon, Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
-import { siApple } from "simple-icons";
 import { useMutation } from "@tanstack/react-query";
 import { loginApi } from "@/lib/api/auth/auth";
 import { toast } from "sonner";
 import { AnyType } from "@/lib/config/error-type";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
-
 // Schema
 const signInSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -178,22 +176,6 @@ export default function SignIn() {
             />
           </svg>
           Login with Google
-        </Button>
-
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full flex items-center justify-center gap-3 !py-3 !px-4 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-        >
-          <svg
-            className="w-5 h-5"
-            viewBox="0 0 24 24"
-            fill="#000000"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d={siApple.path} />
-          </svg>
-          Login with Apple
         </Button>
       </div>
     </>

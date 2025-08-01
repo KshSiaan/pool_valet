@@ -28,24 +28,38 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useCookies } from "react-cookie";
-import { useQuery } from "@tanstack/react-query";
-import { getProfileApi } from "@/lib/api/auth/auth";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getProfileApi, logoutApi } from "@/lib/api/auth/auth";
+import { AnyType } from "@/lib/config/error-type";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export default function ResponsiveNavbar() {
   const path = usePathname();
   const navig = useRouter();
+  const queryClient = useQueryClient();
   const shouldScroll = useRef(false);
   const [scrollTo, setScrollTo] = useState("hiw");
   const [isOpen, setIsOpen] = useState(false);
-  const [cookies] = useCookies(["ghost"]);
-  const { data, isPending } = useQuery({
+  const [cookies, , removeCookie] = useCookies(["ghost"]);
+
+  const { mutate } = useMutation({
+    mutationFn: logoutApi,
+    onSuccess: () => {
+      removeCookie("ghost");
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      navig.push("/");
+    },
+  });
+
+  const { data, isPending }: AnyType = useQuery({
     queryKey: ["profile"],
     queryFn: () => getProfileApi(cookies.ghost),
     enabled: !!cookies.ghost,
   });
-  if (!isPending) {
-    console.log(data.data);
-  }
+
+  // if (!isPending && data) {
+  //   console.log(data.data);
+  // }
 
   function scroller(x: string) {
     if (x === "hiw") {
@@ -68,7 +82,7 @@ export default function ResponsiveNavbar() {
 
   const handleScroll = (x: string) => {
     setScrollTo(x);
-    setIsOpen(false); // Close mobile menu
+    setIsOpen(false);
     if (path === "/") {
       scroller(x);
     } else {
@@ -115,7 +129,6 @@ export default function ResponsiveNavbar() {
 
   return (
     <nav className="">
-      {/* Top contact bar - responsive */}
       <div className="py-2! w-full bg-blue-100 px-4! md:px-8">
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-2 lg:gap-0">
           <div className="flex gap-1 text-xs md:text-sm items-center justify-center lg:justify-start">
@@ -140,9 +153,7 @@ export default function ResponsiveNavbar() {
         </div>
       </div>
 
-      {/* Main navigation bar - responsive */}
       <div className="py-4! px-4! md:px-8! flex flex-row justify-between items-center">
-        {/* Logo */}
         <div className="flex-shrink-0">
           <Image
             src="/icon.png"
@@ -153,16 +164,11 @@ export default function ResponsiveNavbar() {
           />
         </div>
 
-        {/* Desktop Navigation */}
         <div className="hidden lg:flex gap-2">
           <NavigationButtons />
         </div>
 
-        {/* Right side actions */}
         <div className="flex items-center gap-1 md:gap-2">
-          {/* Mobile menu trigger */}
-
-          {/* Notifications */}
           <Popover>
             <PopoverTrigger asChild>
               <Button size="icon" variant="ghost" className="relative">
@@ -209,7 +215,6 @@ export default function ResponsiveNavbar() {
             </PopoverContent>
           </Popover>
 
-          {/* Messages */}
           <Button size="icon" variant="ghost" className="relative" asChild>
             <Link href="/chat">
               <MailIcon className="h-4 w-4 md:h-5 md:w-5" />
@@ -232,17 +237,33 @@ export default function ResponsiveNavbar() {
             >
               <PopoverArrow />
               {cookies.ghost ? (
-                <>
-                  <div className="px-4! md:px-6! space-y-4!">
-                    {isPending && (
-                      <pre className="bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-amber-400 rounded-xl p-6 shadow-lg overflow-x-auto text-sm leading-relaxed border border-zinc-700">
-                        <code className="whitespace-pre-wrap">
-                          {JSON.stringify(data, null, 2)}
-                        </code>
-                      </pre>
-                    )}
+                !isPending && (
+                  <div className="px-4! md:px-6! space-y-4! mt-2">
+                    <div>
+                      <h2 className="text-xl font-bold flex items-center gap-2">
+                        {data.data.full_name}
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="rounded-full size-2.5 bg-green-600" />
+                          </TooltipTrigger>
+                          <TooltipContent>{data.data.status}</TooltipContent>
+                        </Tooltip>
+                      </h2>
+                      <p className="text-muted-foreground text-sm">
+                        {data.data.email}
+                      </p>
+                      <div className="flex justify-end items-center">
+                        <Button
+                          className="mt-6 bg-transparent! hover:border-destructive! hover:text-destructive"
+                          variant={"outline"}
+                          onClick={() => mutate(cookies.ghost)}
+                        >
+                          Log out
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                </>
+                )
               ) : (
                 <div className="px-4! md:px-6! space-y-4!">
                   <h1 className="text-center text-xl md:text-2xl">

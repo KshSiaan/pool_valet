@@ -16,7 +16,7 @@ export const getQuoteApi = async(token:string) => {
 };
 
 export const createQuoteApi  = async(data:ServiceRequest,token:string) => {
-  return await howl({link:"/user/create-quote",method:"post",data,token})
+  return await howl({link:"/user/create-quote",method:"post",data,token,content:"form"})
 };
 
 export const getQuotesApi = async(status:"Pending"| "In progress" |"Completed",token:string) => {
@@ -44,5 +44,29 @@ export const acceptedBidApi = async(id:string|number,token:string) => {
 };
 
 export const cancelOrderApi = async(id:string|number,token:string) => {
-  return await howl({link:`/user/cancel-order?quote_id=${id}`,token})
+  return await howl({link:`/user/cancel-order?quote_id=${id}`,token,})
+};
+
+export const getTopProvidersApi = async(token?:string) => {
+  return await howl({link:`/user/top-providers`,token})
+};
+
+export const getProviderApi = async(id:string|number,token:string) => {
+  return await howl({link:`/user/view-provider/${id}`,token})
+};
+
+export const createReviewApi = async(token:string) => {
+  return await howl({link:`/user/top-providers`,token})
+};
+
+export const getReviewsApi = async(token:string) => {
+  return await howl({link:`/user/get-reviews`,token})
+};
+
+export const viewReviewApi = async(id:string|number,token:string) => {
+  return await howl({link:`/user/view-review/${id}`,token})
+};
+
+export const getPageApi = async(type:'legal_resources'| 'about_us'| 'terms_conditions') => {
+  return await howl({link:`/user/get-page?page_type=${type}`})
 };

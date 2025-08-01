@@ -81,12 +81,30 @@ export default async function howl<T = unknown>({
 }: HowlRequest): Promise<T> {
   if (!link) throw new Error("Missing 'link'.");
 
-  const headers: HeadersInit = {
-    "Content-Type": contentTypes[content] || "application/json",
-  };
+  const headers: HeadersInit = {};
 
   if (token) {
     headers["Authorization"] = `${authSchemes[auth]} ${token}`;
+  }
+
+  let body: BodyInit | null = null;
+
+  if (data) {
+    if (content === "json") {
+      headers["Content-Type"] = contentTypes.json;
+      body = JSON.stringify(data);
+    } else if (content === "form") {
+      headers["Content-Type"] = contentTypes.form;
+      body = new URLSearchParams(data).toString();
+    } else if (content === "multipart") {
+      // IMPORTANT: Do NOT set Content-Type header for FormData
+      // Assume data is FormData instance
+      body = data;
+    } else {
+      // Other content types (text, html, xml, etc.)
+      headers["Content-Type"] = contentTypes[content] || "text/plain";
+      body = data;
+    }
   }
 
   const requestConfig: RequestInit = {
@@ -98,7 +116,7 @@ export default async function howl<T = unknown>({
     referrerPolicy,
     integrity,
     headers,
-    body: data ? (content === "json" ? JSON.stringify(data) : data) : null,
+    body,
   };
 
   const response = await fetch(BASE_API_ENDPOINT + link, requestConfig);
