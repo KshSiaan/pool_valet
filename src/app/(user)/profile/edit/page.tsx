@@ -3,78 +3,28 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { EditIcon } from "lucide-react";
+import { EditIcon, Loader2Icon } from "lucide-react";
 import React from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { editAccApi, getProfileApi } from "@/lib/api/auth/auth";
+import { useCookies } from "react-cookie";
+import EditProfileForm from "./edit-profile";
+import ChangePasswordForm from "./change-pass";
 import { Separator } from "@/components/ui/separator";
-const formSchema = z
-  .object({
-    fullName: z.string().min(2, "Full name must be at least 2 characters"),
-    email: z.string().email("Please enter a valid email address"),
-    bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
-    currentPassword: z
-      .string()
-      .min(1, "Current password is required")
-      .optional(),
-    newPassword: z
-      .string()
-      .min(8, "New password must be at least 8 characters")
-      .optional(),
-    confirmPassword: z.string().optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.newPassword && data.newPassword !== data.confirmPassword) {
-        return false;
-      }
-      return true;
-    },
-    {
-      message: "Passwords don't match",
-      path: ["confirmPassword"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.newPassword && !data.currentPassword) {
-        return false;
-      }
-      return true;
-    },
-    {
-      message: "Current password is required when setting new password",
-      path: ["currentPassword"],
-    }
-  );
+import { AnyType } from "@/lib/config/error-type";
+import { z } from "zod";
+import { toast } from "sonner";
 
 export default function Page() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      bio: "",
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    },
+  const [cookies] = useCookies(["ghost"]);
+  const { data, isPending }: AnyType = useQuery({
+    queryKey: ["profile"],
+    queryFn: () => getProfileApi(cookies.ghost),
   });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Handle form submission here
-  }
+  const { mutate } = useMutation({
+    mutationKey: ["profile"],
+    mutationFn: (data: z.infer<AnyType>) => editAccApi(data, cookies.ghost),
+  });
 
   return (
     <main className="my-12! px-8!">
@@ -99,6 +49,36 @@ export default function Page() {
               type="file"
               accept="image/*"
               className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                console.log(file);
+                if (!file) {
+                  toast.error("Please select a file first!");
+                  return;
+                }
+
+                const formData = new FormData();
+                formData.append("full_name", data.data.full_name);
+                formData.append("email", data.data.email);
+                formData.append("bio", data.data.bio);
+                formData.append("avatar", file);
+                formData.append("_method", "PATCH");
+                try {
+                  mutate(formData, {
+                    onError: (data) => {
+                      toast.error(data.message ?? "Failed to update Avatar");
+                    },
+                    onSuccess: (data: AnyType) => {
+                      toast.success(
+                        data.message ?? "Successfully update Avatar"
+                      );
+                    },
+                  });
+                } catch (error) {
+                  console.error(error);
+                  toast.error("Something went wrong");
+                }
+              }}
             />
           </Button>
         </Avatar>
@@ -108,135 +88,23 @@ export default function Page() {
           <CardTitle className="text-3xl">Personal Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6!">
-              {/* Personal Information Section */}
-              <div className="space-y-6!">
-                <FormField
-                  control={form.control}
-                  name="fullName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="bg-background"
-                          placeholder="Enter your full name"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email Address</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter your email"
-                          type="email"
-                          {...field}
-                          className="bg-background"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="bio"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Bio</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Tell us about yourself"
-                          className="min-h-[160px] bg-background"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <Separator />
-
-              {/* Change Password Section */}
-              <div className="space-y-6!">
-                <h3 className="text-xl font-semibold">Change Password</h3>
-
-                <FormField
-                  control={form.control}
-                  name="currentPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Current Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="bg-background"
-                          placeholder="Enter current password"
-                          type="password"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="newPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>New Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="bg-background"
-                          placeholder="Enter new password"
-                          type="password"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm New Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="bg-background"
-                          placeholder="Confirm new password"
-                          type="password"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <Button type="submit" className="w-full bg-accent-foreground">
-                Save Changes
-              </Button>
-            </form>
-          </Form>
+          {isPending ? (
+            <div className="flex items-center justify-center">
+              <Loader2Icon />
+            </div>
+          ) : (
+            <>
+              <EditProfileForm
+                defaultValues={{
+                  full_name: data?.data?.full_name,
+                  email: data?.data?.email,
+                  bio: data?.data?.bio ?? "",
+                }}
+              />
+              <Separator className="mt-6" />
+              <ChangePasswordForm />
+            </>
+          )}
         </CardContent>
       </Card>
     </main>

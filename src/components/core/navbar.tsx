@@ -252,7 +252,10 @@ export default function ResponsiveNavbar() {
                       <p className="text-muted-foreground text-sm">
                         {data.data.email}
                       </p>
-                      <div className="flex justify-end items-center">
+                      <div className="flex justify-end items-center gap-2">
+                        <Button className="mt-6" asChild>
+                          <Link href={"/profile"}>View Profile</Link>
+                        </Button>
                         <Button
                           className="mt-6 bg-transparent! hover:border-destructive! hover:text-destructive"
                           variant={"outline"}

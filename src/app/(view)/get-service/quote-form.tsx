@@ -24,7 +24,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createQuoteApi } from "@/lib/api/core/core";
 import { toast } from "sonner";
 import { useCookies } from "react-cookie";
-
+import { BASE_API_ENDPOINT } from "@/lib/config/data";
 const serviceList = [
   { icon: "/icon/brush.svg", title: "Pool Cleaning" },
   { icon: "/icon/equipment.svg", title: "Repairs & Equipment" },
@@ -77,13 +77,6 @@ export default function QuoteForm() {
       expected_budget: "",
     },
   });
-  const toBase64 = (file: File) =>
-    new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -94,42 +87,57 @@ export default function QuoteForm() {
   };
   const onSubmit = async (data: any) => {
     if (data.date) {
+      // Assuming formatDate is correct and returns a string
       data.date = formatDate(data.date);
     }
 
     const formData = new FormData();
 
-    if (selectedImage) {
-      const base64Image = await toBase64(selectedImage);
-      data.uploaded_image = base64Image;
-    }
-
+    // Append other data fields to the formData
     Object.entries(data).forEach(([key, value]) => {
+      // Skip photos as we've already handled it manually
+      if (key === "photos") return;
       if (typeof value === "string" && value.trim() !== "") {
         formData.append(key, value);
       } else if (typeof value === "number") {
         formData.append(key, value.toString());
       }
     });
+    formData.append("photo_1", selectedImage as File);
 
-    mutate(
-      { data: formData, token: cookies.ghost },
-      {
-        onError: (error: any) => {
-          toast.error(error.message ?? "Something went wrong!");
+    // formData.forEach((value, key) => {
+    //   console.log(`${key}: ${value}`);
+    // });
+
+    try {
+      const response = await fetch(`${BASE_API_ENDPOINT}/user/create-quote`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${cookies.ghost}`,
         },
-        onSuccess: (response: any) => {
-          toast.success(response.message ?? "Quote created successfully!");
-        },
+        body: formData, // Must be FormData if uploading files
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error(data.message ?? "Something went wrong!");
+        return;
       }
-    );
-  };
 
+      toast.success(data.message ?? "Quote created successfully!");
+      console.log(data);
+    } catch (error: any) {
+      toast.error(error.message ?? "Something went wrong!");
+    }
+  };
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedImage(file);
       setPreviewUrl(URL.createObjectURL(file));
+      console.log("FILE");
+      console.log(file);
     }
   };
 

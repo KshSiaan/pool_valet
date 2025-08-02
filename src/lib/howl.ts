@@ -68,9 +68,9 @@ export class HowlError extends Error {
 export default async function howl<T = unknown>({
   link,
   method = "get",
-  data = null,
+  data = {}, // stays empty object for safety
   auth = "bearer",
-  content = "json",
+  content, // no default value now
   token,
   mode = "cors",
   cache = "default",
@@ -89,7 +89,11 @@ export default async function howl<T = unknown>({
 
   let body: BodyInit | null = null;
 
-  if (data) {
+  const isDataEmpty =
+    (typeof data === "object" && data !== null && Object.keys(data).length === 0) ||
+    data === undefined;
+
+  if (!isDataEmpty) {
     if (content === "json") {
       headers["Content-Type"] = contentTypes.json;
       body = JSON.stringify(data);
@@ -97,12 +101,12 @@ export default async function howl<T = unknown>({
       headers["Content-Type"] = contentTypes.form;
       body = new URLSearchParams(data).toString();
     } else if (content === "multipart") {
-      // IMPORTANT: Do NOT set Content-Type header for FormData
-      // Assume data is FormData instance
+      // Do NOT set Content-Type, let browser handle it (FormData)
+      body = data;
+    } else if (content) {
+      headers["Content-Type"] = contentTypes[content] || "text/plain";
       body = data;
     } else {
-      // Other content types (text, html, xml, etc.)
-      headers["Content-Type"] = contentTypes[content] || "text/plain";
       body = data;
     }
   }

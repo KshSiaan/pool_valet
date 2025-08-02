@@ -1,3 +1,4 @@
+import { AnyType } from "@/lib/config/error-type";
 import howl from "@/lib/howl";
 interface ServiceRequest {
   service: string;
@@ -10,16 +11,17 @@ interface ServiceRequest {
   zip_code: string;
   address: string;
   expected_budget: number;
+  photos?:AnyType
 }
-export const getQuoteApi = async(token:string) => {
-  return await howl({link:"/user/get-quotes",token})
+export const getQuotesApi = async(token:string,page:string|number) => {
+  return await howl({link:`/user/get-quotes?page=${page}`,token})
 };
 
 export const createQuoteApi  = async(data:ServiceRequest,token:string) => {
   return await howl({link:"/user/create-quote",method:"post",data,token,content:"form"})
 };
 
-export const getQuotesApi = async(status:"Pending"| "In progress" |"Completed",token:string) => {
+export const getMyQuotesApi = async(status:"Pending"| "In progress" |"Completed"|null,token:string) => {
   return await howl({link:`/user/get-my-quotes?status=${status}`,token})
 };
 

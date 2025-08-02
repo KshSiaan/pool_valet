@@ -23,6 +23,14 @@ export const updatePassApi  = async(data:{current:string,password:string,passwor
   return await howl({link:"/update-password",method:"post",data,token})
 };
 
+export const editAccApi  = async(data:{full_name:string,email:string,bio:string,avatar:string, method:string},token:string) => {
+  return await howl({link:"/edit-account",method:"post",data,token,content:"form"})
+};
+
+export const editAddressApi  = async(data:{current:string,password:string,password_confirmation:string},token:string) => {
+  return await howl({link:"/edit-address",method:"post",data,token})
+};
+
 export const getProfileApi = async(token:string) => {
   return await howl({link:"/get-profile",token})
 };
