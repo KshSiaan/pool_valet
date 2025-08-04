@@ -11,7 +11,7 @@ export const resendOtpApi = async(data:{email:string,}) => {
   return await howl({link:"/resend-otp",method:"post",data})
 };
 
-export const forgotApi = async(data:{email:string,}) => {
+export const forgotApi = async(data:{email:string}) => {
   return await howl({link:"/forgot-password",method:"post",data})
 };
 

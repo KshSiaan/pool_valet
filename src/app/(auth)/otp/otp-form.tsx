@@ -18,13 +18,16 @@ import { toast } from "sonner";
 import howl from "@/lib/howl";
 import { useCookies } from "react-cookie";
 import { AnyType } from "@/lib/config/error-type";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { decrypt } from "@/lib/formatter";
 
 const verificationSchema = z.object({
   code: z.string().min(6, "Code must be at least 6 characters"),
 });
 
 export default function AuthForms() {
+  const mail = useSearchParams().get("xxx");
   const [, setCookie] = useCookies(["ghost"]);
   const navig = useRouter();
   const form = useForm<z.infer<typeof verificationSchema>>({
@@ -33,7 +36,12 @@ export default function AuthForms() {
       code: "",
     },
   });
+  useEffect(() => {
+    const code = decrypt(mail as string, 1);
+    console.log(code);
 
+    return () => {};
+  }, []);
   const onSubmit = async (data: z.infer<typeof verificationSchema>) => {
     try {
       const call: AnyType = await howl({

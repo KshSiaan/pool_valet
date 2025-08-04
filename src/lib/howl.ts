@@ -93,23 +93,26 @@ export default async function howl<T = unknown>({
     (typeof data === "object" && data !== null && Object.keys(data).length === 0) ||
     data === undefined;
 
-  if (!isDataEmpty) {
-    if (content === "json") {
-      headers["Content-Type"] = contentTypes.json;
-      body = JSON.stringify(data);
-    } else if (content === "form") {
-      headers["Content-Type"] = contentTypes.form;
-      body = new URLSearchParams(data).toString();
-    } else if (content === "multipart") {
-      // Do NOT set Content-Type, let browser handle it (FormData)
-      body = data;
-    } else if (content) {
-      headers["Content-Type"] = contentTypes[content] || "text/plain";
-      body = data;
-    } else {
-      body = data;
-    }
+if (!isDataEmpty) {
+  if (content === "json") {
+    headers["Content-Type"] = contentTypes.json;
+    body = JSON.stringify(data);
+  } else if (content === "form") {
+    headers["Content-Type"] = contentTypes.form;
+    body = new URLSearchParams(data).toString();
+  } else if (content === "multipart") {
+    // DO NOT set Content-Type here. Browser will handle it.
+    body = data; // data should be a FormData instance.
+  } else if (content) {
+    headers["Content-Type"] = contentTypes[content] ?? contentTypes.json;
+    body = data;
+  } else {
+    // DEFAULT content-type as application/json if data exists and content is not specified
+    headers["Content-Type"] = contentTypes.json;
+    body = JSON.stringify(data);
   }
+}
+
 
   const requestConfig: RequestInit = {
     method: method.toUpperCase(),
@@ -125,7 +128,7 @@ export default async function howl<T = unknown>({
 
   const response = await fetch(BASE_API_ENDPOINT + link, requestConfig);
 
-  const contentType = response.headers.get("Content-Type") || "";
+  const contentType = response.headers.get("Content-Type") || "application/json";
   const text = await response.text();
 
   let responseData: any;
