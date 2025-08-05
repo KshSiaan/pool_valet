@@ -268,6 +268,7 @@ export default function ResponsiveNavbar() {
                   </div>
                 )
               ) : (
+                //
                 <div className="px-4! md:px-6! space-y-4!">
                   <h1 className="text-center text-xl md:text-2xl">
                     Welcome to Pool Valet
