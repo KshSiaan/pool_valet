@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,15 +5,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import Image from "next/image";
 import Features from "./_home/features";
 import MadeSimple from "./_home/made-simple";
 import Testimonials from "./_home/testimonials";
-import Link from "next/link";
 import NearYou from "./_home/near-you";
 import { Suspense } from "react";
 import { Loader2Icon } from "lucide-react";
+import ButtonCheck from "./_home/button-check";
 export default function Home() {
   return (
     <main className="mb-8! px-2! lg:px-8!">
@@ -28,12 +26,9 @@ export default function Home() {
             Compare quotes from trusted pros for cleaning, repairs, or new pool
             builds.
           </p>
-          <Button
-            className="w-full sm:w-auto lg:text-xl py-6! px-8! bg-[#003B73] hover:bg-[#002873e5]"
-            asChild
-          >
-            <Link href="/get-service">Get Quotes</Link>
-          </Button>
+          <Suspense fallback={""}>
+            <ButtonCheck />
+          </Suspense>
         </div>
       </section>
       <section className="mb-24!">

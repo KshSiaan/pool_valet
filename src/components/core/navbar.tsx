@@ -280,14 +280,14 @@ export default function ResponsiveNavbar() {
                   </p>
                   <Button
                     size="lg"
-                    className="bg-accent-foreground rounded-full w-full"
+                    className="bg-accent-foreground hover:bg-accent-foreground/80 rounded-full w-full"
                     asChild
                   >
                     <Link href={`/auth?as=user`}>Continue as Home Owner</Link>
                   </Button>
                   <Button
                     size="lg"
-                    className="bg-background text-foreground rounded-full w-full"
+                    className="bg-background hover:bg-slate-200 text-foreground rounded-full w-full"
                     asChild
                   >
                     <Link href="/auth?as=provider">
