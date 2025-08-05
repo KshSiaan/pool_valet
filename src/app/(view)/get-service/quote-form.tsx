@@ -18,13 +18,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ImageIcon, Loader2Icon, XIcon } from "lucide-react";
+import { ImageIcon, XIcon } from "lucide-react";
 import Image from "next/image";
-import { useMutation } from "@tanstack/react-query";
-import { createQuoteApi } from "@/lib/api/core/core";
+
 import { toast } from "sonner";
 import { useCookies } from "react-cookie";
 import { BASE_API_ENDPOINT } from "@/lib/config/data";
+import { useRouter } from "next/navigation";
 const serviceList = [
   { icon: "/icon/brush.svg", title: "Pool Cleaning" },
   { icon: "/icon/equipment.svg", title: "Repairs & Equipment" },
@@ -51,16 +51,12 @@ export default function QuoteForm() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [cookies] = useCookies(["ghost"]);
-  const { mutate, isPending } = useMutation({
-    mutationKey: ["providers"],
-    mutationFn: ({ data, token }: { data: any; token: string }) =>
-      createQuoteApi(data, token),
-  });
-
+  const navig = useRouter();
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(formSchema),
@@ -127,6 +123,8 @@ export default function QuoteForm() {
 
       toast.success(data.message ?? "Quote created successfully!");
       console.log(data);
+      reset();
+      navig.push("/my-orders");
     } catch (error: any) {
       toast.error(error.message ?? "Something went wrong!");
     }
@@ -287,13 +285,11 @@ export default function QuoteForm() {
 
       <Button
         type="submit"
-        className={`w-1/2 mx-auto flex bg-[#003B73] mt-8 ${
-          isPending ? "opacity-70 cursor-not-allowed" : ""
+        className={`w-1/2 mx-auto flex bg-[#003B73] mt-8 "
         }`}
         size="lg"
-        disabled={isPending}
       >
-        {isPending ? <Loader2Icon className="animate-spin" /> : "Add"}
+        Add
       </Button>
     </form>
   );

@@ -22,11 +22,53 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowRight, StarIcon } from "lucide-react";
+import { ArrowRight, Loader2Icon, StarIcon } from "lucide-react";
 import React from "react";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import { getCheckBidsApi } from "@/lib/api/core/core";
+import { useCookies } from "react-cookie";
 
 export default function BidList() {
+  const [cookies] = useCookies(["ghost"]);
+  const { data, isPending } = useQuery({
+    queryKey: ["bids"],
+    queryFn: () => {
+      return getCheckBidsApi(cookies.ghost);
+    },
+  });
+  console.log(data);
+
+  if (!cookies.ghost) {
+    return (
+      <Card className="w-2/3 mx-auto!">
+        <CardHeader>
+          <CardTitle className="text-2xl text-accent-foreground">
+            Service Provider Bids
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="h-24 w-full flex justify-center items-center">
+          You must log in to see your bids
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (isPending) {
+    return (
+      <Card className="w-2/3 mx-auto!">
+        <CardHeader>
+          <CardTitle className="text-2xl text-accent-foreground">
+            Service Provider Bids
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="h-24 w-full flex justify-center items-center">
+          <Loader2Icon className={`animate-spin`} />
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <>
       <Card className="w-2/3 mx-auto!">

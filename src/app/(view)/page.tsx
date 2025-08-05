@@ -12,7 +12,9 @@ import Features from "./_home/features";
 import MadeSimple from "./_home/made-simple";
 import Testimonials from "./_home/testimonials";
 import Link from "next/link";
-
+import NearYou from "./_home/near-you";
+import { Suspense } from "react";
+import { Loader2Icon } from "lucide-react";
 export default function Home() {
   return (
     <main className="mb-8! px-2! lg:px-8!">
@@ -79,43 +81,15 @@ export default function Home() {
       <Features />
       <MadeSimple />
       <Testimonials />
-      <section>
-        <h1 className="text-xl lg:text-3xl text-center font-semibold">
-          Quotes Request Near you
-        </h1>
-        <div className="w-full mt-12! grid lg:grid-cols-3 gap-6">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Card key={i}>
-              <CardContent className="flex flex-col lg:flex-row gap-4">
-                <Image
-                  src="/image/avatar.jpg"
-                  height={600}
-                  width={250}
-                  className="h-48 w-34 rounded-lg object-cover"
-                  alt="thumbnail"
-                />
-                <div className="flex-1">
-                  <h3 className="text-xl">L. Messi</h3>
-                  <p className="text-green-500 text-xl font-semibold mb-6! lg:mb-0!">
-                    $865.75
-                  </p>
-                  <p>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Odio quisquam reiciendis dolorum, blanditiis unde quasi
-                    assumenda doloribus corrupti eveniet vel reprehenderit?
-                    Alias blanditiis sint ab quidem velit expedita ducimus eius!
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        <div className="flex justify-center items-center">
-          <Button size="lg" className="mt-12! mx-auto!" asChild>
-            <Link href="/browse">See All</Link>
-          </Button>
-        </div>
-      </section>
+      <Suspense
+        fallback={
+          <div className={`flex justify-center items-center h-24 mx-auto`}>
+            <Loader2Icon className={`animate-spin`} />
+          </div>
+        }
+      >
+        <NearYou />
+      </Suspense>
     </main>
   );
 }

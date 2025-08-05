@@ -20,6 +20,7 @@ import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import howl from "@/lib/howl";
 import { useRouter } from "next/navigation";
+import { encrypt } from "@/lib/formatter";
 
 const signUpSchema = z
   .object({
@@ -67,7 +68,7 @@ export default function SignUp({ as }: { as: string }) {
         toast.error(call.message ?? "Failed to Log in");
       } else {
         toast.success(call.message ?? "Successfully Logged in");
-        navig.push("/otp");
+        navig.push(`/otp?xxx=${encrypt(dataset.email, 1)}`);
       }
     } catch (error) {
       console.error(error);

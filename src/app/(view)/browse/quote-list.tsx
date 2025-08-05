@@ -1,9 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 import {
   Pagination,
   PaginationContent,
@@ -20,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { getQuotesApi } from "@/lib/api/core/core";
+import { browseQuotesApi } from "@/lib/api/core/core";
 import { useCookies } from "react-cookie";
 import { AnyType } from "@/lib/config/error-type";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -28,13 +27,23 @@ import Link from "next/link";
 
 export default function QuoteList() {
   const [cookies] = useCookies(["ghost"]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const { data, isPending, isError }: AnyType = useQuery({
     queryKey: ["quotes", page],
-    queryFn: () => getQuotesApi(cookies.ghost, page),
+    queryFn: () => browseQuotesApi(cookies.ghost, page),
   });
 
-  if (!cookies.ghost) {
+  const [cookieLoaded, setCookieLoaded] = useState(false);
+  const [ghostCookie, setGhostCookie] = useState<string | null>(null);
+
+  useEffect(() => {
+    setGhostCookie(cookies.ghost || null);
+    setCookieLoaded(true);
+  }, [cookies.ghost]);
+
+  if (!cookieLoaded) return null;
+
+  if (!ghostCookie) {
     return (
       <Card className="w-2/3 mx-auto!">
         <CardHeader>
@@ -63,8 +72,8 @@ export default function QuoteList() {
       </Card>
     );
   }
-  const quoteData = data?.quotes?.data || [];
-  console.log(quoteData);
+
+  const quoteData = data?.data?.data ?? [];
 
   return (
     <>
@@ -149,42 +158,98 @@ export default function QuoteList() {
       <div className="mt-24! mb-12! flex justify-center">
         <Pagination>
           <PaginationContent className="flex items-center gap-2">
-            {data?.quotes?.links?.map((link: AnyType, idx: number) => {
-              const isDisabled = link.url === null || isPending;
-              const isActive = link.active;
+            {(() => {
+              const totalLinks = data?.data?.links || [];
+              const currentPage = page;
 
-              const pageNum = link.url
-                ? parseInt(new URL(link.url).searchParams.get("page") || "1")
-                : null;
+              const numberedLinks = totalLinks.filter(
+                (l: AnyType) => !isNaN(parseInt(l.label))
+              );
 
-              const displayLabel =
-                link.label === "&laquo; Previous" ? (
-                  <ArrowLeft />
-                ) : link.label === "Next &raquo;" ? (
-                  <ArrowRight />
-                ) : (
-                  link.label
-                );
+              const currentIndex = numberedLinks.findIndex(
+                (l: AnyType) => parseInt(l.label) === currentPage
+              );
+
+              let start = Math.max(currentIndex - 2, 0);
+              const end = Math.min(start + 5, numberedLinks.length);
+
+              if (end - start < 5) {
+                start = Math.max(end - 5, 0);
+              }
+
+              const displayedLinks = numberedLinks.slice(start, end);
+
+              const prevLink = totalLinks.find((l: AnyType) =>
+                l.label.includes("Previous")
+              );
+              const nextLink = totalLinks.find((l: AnyType) =>
+                l.label.includes("Next")
+              );
 
               return (
-                <PaginationItem key={idx}>
-                  <PaginationLink
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (!isDisabled && pageNum) {
-                        setPage(pageNum);
-                      }
-                    }}
-                    isActive={isActive}
-                    className={
-                      isDisabled ? "pointer-events-none opacity-50" : ""
-                    }
-                  >
-                    {displayLabel}
-                  </PaginationLink>
-                </PaginationItem>
+                <>
+                  {prevLink && (
+                    <PaginationItem>
+                      <PaginationLink
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (prevLink.url && !isPending) {
+                            setPage(currentPage - 1);
+                          }
+                        }}
+                        className={
+                          prevLink.url === null || isPending
+                            ? "pointer-events-none opacity-50"
+                            : ""
+                        }
+                      >
+                        <ArrowLeft />
+                      </PaginationLink>
+                    </PaginationItem>
+                  )}
+
+                  {displayedLinks.map((link: AnyType, idx: number) => {
+                    const pageNum = parseInt(link.label);
+                    const isActive = pageNum === currentPage;
+                    return (
+                      <PaginationItem key={idx}>
+                        <PaginationLink
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (!isPending) setPage(pageNum);
+                          }}
+                          className={
+                            isActive ? "bg-primary text-primary-foreground" : ""
+                          }
+                        >
+                          {pageNum}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  })}
+
+                  {nextLink && (
+                    <PaginationItem>
+                      <PaginationLink
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (nextLink.url && !isPending) {
+                            setPage(currentPage + 1);
+                          }
+                        }}
+                        className={
+                          nextLink.url === null || isPending
+                            ? "pointer-events-none opacity-50"
+                            : ""
+                        }
+                      >
+                        <ArrowRight />
+                      </PaginationLink>
+                    </PaginationItem>
+                  )}
+                </>
               );
-            })}
+            })()}
           </PaginationContent>
         </Pagination>
       </div>

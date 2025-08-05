@@ -22,7 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${roboto.variable} font-roboto antialiased`}>
+      <body
+        className={`${roboto.variable} font-roboto antialiased overflow-x-hidden`}
+      >
         <Provider>{children}</Provider>
         <Toaster richColors />
       </body>

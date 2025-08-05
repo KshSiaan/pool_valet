@@ -47,16 +47,15 @@ export default function EditProfileForm({
     try {
       const finalizer = {
         ...values,
-        avatar: defaultValues.avatar,
         _method: "PATCH",
       };
 
-      const call: AnyType = mutate(finalizer, {
-        onError: () => {
-          toast.error(call.message ?? "Failed to updated your profile");
+      mutate(finalizer, {
+        onSuccess: (data: AnyType) => {
+          toast.success(data.message ?? "Successfully updated your profile");
         },
-        onSuccess: () => {
-          toast.success(call.message ?? "Successfully updated your profile");
+        onError: (error: AnyType) => {
+          toast.error(error.message ?? "Failed to update your profile");
         },
       });
     } catch (error) {

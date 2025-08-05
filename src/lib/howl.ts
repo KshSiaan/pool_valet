@@ -59,6 +59,7 @@ export class HowlError extends Error {
 
   constructor(message: string, status: number, data: any) {
     super(message);
+    Object.setPrototypeOf(this, HowlError.prototype); // Important for instanceof to work
     this.name = "HowlError";
     this.status = status;
     this.data = data;
@@ -68,9 +69,9 @@ export class HowlError extends Error {
 export default async function howl<T = unknown>({
   link,
   method = "get",
-  data = {}, // stays empty object for safety
+  data = {},
   auth = "bearer",
-  content, // no default value now
+  content,
   token,
   mode = "cors",
   cache = "default",
@@ -93,26 +94,24 @@ export default async function howl<T = unknown>({
     (typeof data === "object" && data !== null && Object.keys(data).length === 0) ||
     data === undefined;
 
-if (!isDataEmpty) {
-  if (content === "json") {
-    headers["Content-Type"] = contentTypes.json;
-    body = JSON.stringify(data);
-  } else if (content === "form") {
-    headers["Content-Type"] = contentTypes.form;
-    body = new URLSearchParams(data).toString();
-  } else if (content === "multipart") {
-    // DO NOT set Content-Type here. Browser will handle it.
-    body = data; // data should be a FormData instance.
-  } else if (content) {
-    headers["Content-Type"] = contentTypes[content] ?? contentTypes.json;
-    body = data;
-  } else {
-    // DEFAULT content-type as application/json if data exists and content is not specified
-    headers["Content-Type"] = contentTypes.json;
-    body = JSON.stringify(data);
+  if (!isDataEmpty) {
+    if (content === "json") {
+      headers["Content-Type"] = contentTypes.json;
+      body = JSON.stringify(data);
+    } else if (content === "form") {
+      headers["Content-Type"] = contentTypes.form;
+      body = new URLSearchParams(data).toString();
+    } else if (content === "multipart") {
+      // Do not set content-type
+      body = data; // data must be FormData
+    } else if (content) {
+      headers["Content-Type"] = contentTypes[content] ?? contentTypes.json;
+      body = data;
+    } else {
+      headers["Content-Type"] = contentTypes.json;
+      body = JSON.stringify(data);
+    }
   }
-}
-
 
   const requestConfig: RequestInit = {
     method: method.toUpperCase(),
@@ -144,8 +143,23 @@ if (!isDataEmpty) {
     console.log(responseData);
     console.log("________ERROR RESPONSE END____________");
 
-    throw new HowlError(response.statusText || "Fetch Error", response.status, responseData);
+    // throw new HowlError(response.statusText || "Fetch Error", response.status, responseData);
   }
 
   return responseData as T;
+}
+
+// Safe wrapper to prevent app crashes
+export async function safeHowl<T = unknown>(
+  req: HowlRequest
+): Promise<{ data?: T; error?: HowlError }> {
+  try {
+    const data = await howl<T>(req);
+    return { data };
+  } catch (error) {
+    if (error instanceof HowlError) {
+      return { error };
+    }
+    throw error; // unexpected error (network crash, etc.)
+  }
 }

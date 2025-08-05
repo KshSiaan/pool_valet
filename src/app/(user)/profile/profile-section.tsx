@@ -14,11 +14,6 @@ export default async function ProfileSec() {
   const user = call?.data;
   return (
     <section className="mx-auto! w-2/3 space-y-4!">
-      {/* <pre className="bg-gradient-to-br fixed top-1/2 left-1/2 -translate-1/2 w-[90dvw] z-50 from-zinc-900/60 via-zinc-800/40 to-zinc-900/20 text-amber-400 rounded-xl p-6 shadow-lg overflow-x-auto text-sm leading-relaxed border border-zinc-700/20">
-        <code className="whitespace-pre-wrap">
-          {JSON.stringify(call, null, 2)}
-        </code>
-      </pre> */}
       <h1 className="text-4xl font-semibold">Hello, {user.full_name}</h1>
       <p className="w-2/3">
         From your account dashboard. you can easily check & view your{" "}
@@ -94,8 +89,8 @@ export default async function ProfileSec() {
                 {user.email ?? "N/A"}
               </p>
             </div>
-            <Button variant="outline" size="lg" className="mt-6!">
-              Edit Address
+            <Button variant="outline" size="lg" className="mt-6!" asChild>
+              <Link href={`profile/address`}>Edit Address</Link>
             </Button>
           </CardContent>
         </Card>
@@ -106,7 +101,9 @@ export default async function ProfileSec() {
                 <RocketIcon className="text-blue-500" />
               </div>
               <div className="flex-1 flex flex-col justify-between">
-                <h3 className="text-xl font-semibold">154</h3>
+                <h3 className="text-xl font-semibold">
+                  {call.total_order ?? "N/A"}
+                </h3>
                 <p>Total Orders</p>
               </div>
             </CardContent>
@@ -117,7 +114,9 @@ export default async function ProfileSec() {
                 <ReceiptTextIcon className="text-amber-500" />
               </div>
               <div className="flex-1 flex flex-col justify-between">
-                <h3 className="text-xl font-semibold">05</h3>
+                <h3 className="text-xl font-semibold">
+                  {call.pending_order ?? "N/A"}
+                </h3>
                 <p>Pending Orders</p>
               </div>
             </CardContent>
@@ -128,7 +127,9 @@ export default async function ProfileSec() {
                 <PackageIcon className="text-green-500" />
               </div>
               <div className="flex-1 flex flex-col justify-between">
-                <h3 className="text-xl font-semibold">154</h3>
+                <h3 className="text-xl font-semibold">
+                  {call.completed_order ?? "N/A"}
+                </h3>
                 <p>Completed Orders</p>
               </div>
             </CardContent>

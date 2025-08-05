@@ -27,7 +27,18 @@ export const editAccApi  = async(data:{full_name:string,email:string,bio:string,
   return await howl({link:"/edit-account",method:"post",data,token,content:"form"})
 };
 
-export const editAddressApi  = async(data:{current:string,password:string,password_confirmation:string},token:string) => {
+export type EditAddressPayload = {
+  display_name: string;
+  user_name: string;
+  email: string;
+  phone_number: string;
+  country: string;
+  state: string;
+  zip_code: string;
+  _method:"PATCH"
+};
+
+export const editAddressApi  = async(data:EditAddressPayload,token:string) => {
   return await howl({link:"/edit-address",method:"post",data,token})
 };
 

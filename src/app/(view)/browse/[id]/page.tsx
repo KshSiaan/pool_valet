@@ -1,7 +1,7 @@
 import { Loader2Icon } from "lucide-react";
 import React, { Suspense } from "react";
 import Details from "./detail";
-import { viewQuoteApi } from "@/lib/api/core/core";
+import { ViewBrowsedQuoteApi } from "@/lib/api/core/core";
 import { cookies } from "next/headers";
 import { AnyType } from "@/lib/config/error-type";
 
@@ -12,7 +12,7 @@ export default async function Page({
 }) {
   const token = (await cookies()).get("ghost")?.value;
   const id = (await params).id;
-  const call: AnyType = await viewQuoteApi(id, token ?? "");
+  const call: AnyType = await ViewBrowsedQuoteApi(id, token ?? "");
 
   return (
     <main>
