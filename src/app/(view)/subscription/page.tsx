@@ -60,7 +60,7 @@ export default function Page() {
         {subscriptionDetails.map((x, i) => (
           <div className="" key={x.cost + x.title}>
             <div className="text-center">
-              <h5 className="text-lg">{x.title}</h5>
+              <h5 className="text-lg font-semibold">{x.title}</h5>
               <p className="text-sm">{x.sub}</p>
             </div>
             <div

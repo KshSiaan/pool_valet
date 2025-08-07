@@ -6,6 +6,8 @@ import { SubscriptionDetailsType } from "./page";
 import { buyPlanApi, createPaymentIntentApi } from "@/lib/api/core/core";
 import { useCookies } from "react-cookie";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { AnyType } from "@/lib/config/error-type";
 
 export default function Subscriber({
   x,
@@ -14,6 +16,7 @@ export default function Subscriber({
   x: SubscriptionDetailsType;
   i: number;
 }) {
+  const navig = useRouter();
   const [cookies] = useCookies(["ghost"]);
   const { mutate } = useMutation({
     mutationKey: ["subscription"],
@@ -54,8 +57,9 @@ export default function Subscriber({
         onError: (err) => {
           toast.error(err?.message ?? "Failed to create Payment intent");
         },
-        onSuccess: (data) => {
+        onSuccess: (data: AnyType) => {
           console.log(data);
+          navig.push(`/subscription/payment?xxx=${data.payment_intent_id}`);
         },
       }
     );
