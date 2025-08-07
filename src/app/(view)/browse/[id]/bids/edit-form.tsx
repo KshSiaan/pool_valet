@@ -37,7 +37,7 @@ export default function EditForm({
 }) {
   const [cookies] = useCookies(["ghost"]);
   const queryClient = useQueryClient();
-  console.log(data.price_offered);
+  console.log(data.data.price_offered);
 
   const form = useForm<z.infer<typeof bidSchema>>({
     resolver: zodResolver(bidSchema),
