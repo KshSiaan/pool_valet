@@ -1,152 +1,108 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState, useEffect } from "react";
-import { loadStripe } from "@stripe/stripe-js";
+import { useEffect, useState } from "react";
 import {
-  Elements,
   PaymentElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
 
 import { useCookies } from "react-cookie";
-import { usePathname } from "next/navigation";
-
 import { Loader2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import howl from "@/lib/howl";
 import { toast } from "sonner";
 import { AnyType } from "@/lib/config/error-type";
 
-const stripePromise = loadStripe(
-  "pk_test_51QKAtBKOpUtqOuW1x5VdNqH3vG7CZZl1P6V3VuV1qsRUmPLNk26i34AXeu2zCO3QurFJAOZ9zfb0EkWeCVhqBYgH008X41cXr6"
-);
-const CheckoutForm = ({
-  price,
-  clientSecret,
+export default function PaymentForm({
   id,
+  price,
+  paymentId,
 }: {
+  id: string;
   price: string;
-  clientSecret: string;
-  id: string | number;
-}) => {
-  const [cookies] = useCookies(["raven"]);
-  const path = usePathname();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [preferedLink, setPreferedLink] = useState<string>("/");
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
+  paymentId: string;
+}) {
+  const [cookies] = useCookies(["ghost"]);
   const stripe = useStripe();
   const elements = useElements();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  useEffect(() => {
+    console.log(id);
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!stripe || !elements) return;
 
-    // Call elements.submit() to collect data
+    setIsLoading(true);
+
     const { error: submitError } = await elements.submit();
     if (submitError) {
-      console.error(submitError.message);
+      toast.error(submitError.message);
+      setIsLoading(false);
       return;
     }
 
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
-      clientSecret,
       confirmParams: {
-        return_url: window.location.origin,
+        return_url: window.location.origin + "/success", // optional
       },
       redirect: "if_required",
     });
 
     if (error) {
-      console.error(error.message);
-    } else if (paymentIntent.status === "succeeded") {
-      // console.log("Payment successful!");
-      const readyData = {
-        subscription_id: id,
-        payment_intent_id: paymentIntent.id,
-      };
-      // console.log(readyData);
+      toast.error(error.message);
+    } else if (paymentIntent?.status === "succeeded") {
       try {
-        const call: AnyType = await howl({
+        const data = {
+          subscription_id: id,
+          payment_intent_id: paymentId, // ✅ real payment intent ID
+        };
+
+        const result: AnyType = await howl({
           link: "/provider/buy-plan-success",
-          token: cookies.raven,
+          token: cookies.ghost,
           method: "post",
-          data: readyData,
+          data,
         });
 
-        if (!call.status) {
-          toast.error(call.message ?? "Payment failed");
-          return;
+        if (!result.status) {
+          toast.error(result.message ?? "Payment failed");
         } else {
-          toast.success(call.message);
-          setPreferedLink(`/success`);
-          showModal();
+          toast.success(result.message ?? "Payment success");
+          window.location.href = "/subscription/payment/success";
         }
-      } catch (error) {
-        alert("Payment was successful but couldn't add to database");
+      } catch {
+        toast.error("Payment successful but couldn't log it.");
       }
+    } else {
+      toast.error(
+        `Payment failed: ${paymentIntent?.status ?? "Unknown status"}`
+      );
     }
 
-    if (error) alert(error.message);
+    setIsLoading(false);
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <PaymentElement />
-        <Button
-          className="!bg-[#7849D4] hover:!bg-[#7849D4] !text-background !border-none w-full mt-12"
-          disabled={!stripe || !elements}
-        >
-          Pay ${parseInt(price).toFixed(2)} (with charge)
-        </Button>
-      </form>
-    </>
-  );
-};
-
-export default function PaymentForm({
-  id,
-  price,
-}: {
-  id: string;
-  price: string;
-}) {
-  const [clientSecret, setClientSecret] = useState("");
-  const [cookies] = useCookies(["raven"]);
-
-  return clientSecret ? (
-    <>
-      <br />
-      <Elements
-        stripe={stripePromise}
-        options={{
-          // mode: "payment",
-          // amount: 123,
-          // currency: "usd",
-          clientSecret,
-        }}
+    <form onSubmit={handleSubmit} className="w-full">
+      <PaymentElement className="border-2 rounded-md border-slate-600 shadow-none! pb-0.5" />
+      <Button
+        className="w-full mt-6"
+        disabled={!stripe || !elements || isLoading}
       >
-        <CheckoutForm id={id} clientSecret={clientSecret} price={price} />
-      </Elements>
-    </>
-  ) : (
-    <div className="h-[100px] w-full flex justify-center items-center">
-      <Loader2Icon className="animate-spin !mr-4" />
-      Preparing your order
-    </div>
+        {isLoading ? (
+          <>
+            <Loader2Icon className="animate-spin mr-2 h-4 w-4" />
+            Processing...
+          </>
+        ) : (
+          <>Pay ${parseInt(price).toFixed(2)}</>
+        )}
+      </Button>
+    </form>
   );
 }

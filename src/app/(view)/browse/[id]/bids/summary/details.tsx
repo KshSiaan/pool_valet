@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
 import { AnyType } from "@/lib/config/error-type";
-import { Loader2Icon, MailIcon, MapPin } from "lucide-react";
+import { InfoIcon, Loader2Icon, MailIcon, MapPin } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { serverImageBuilder } from "@/lib/formatter";
@@ -43,11 +43,16 @@ export default async function Details({ id }: { id: string | number }) {
               variant={"outline"}
               className="rounded-full border-0!"
               size={"sm"}
+              asChild
             >
-              See all plans
+              <Link href={"/subscription"}>See all plans</Link>
             </Button>
           </div>
         )}
+        <p className="font-semibold text-center items-center mx-auto w-fit flex justify-center gap-2 mt-6 text-muted-foreground text-sm">
+          <InfoIcon className="size-5" />
+          After accept by home owners you can start the service.
+        </p>
       </div>
       <div className="">
         <h1 className="text-3xl text-center my-6">Owners Information</h1>

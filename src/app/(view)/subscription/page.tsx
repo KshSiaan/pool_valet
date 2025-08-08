@@ -5,7 +5,7 @@ import React from "react";
 import Subscriber from "./subscriber";
 const subscriptionDetails = [
   {
-    title: "Get Premium",
+    title: "Get Free",
     sub: "Subscribe to basic for get access to bidding",
     ico: "/icon/free_891438 1.svg",
     cost: 0,
@@ -77,7 +77,7 @@ export default function Page() {
                 className="size-10"
               />
               <h4 className="text-2xl font-bold">{x.costString}</h4>
-              <p className="font-semibold">Can bid 2 quotes</p>
+              <p className="font-semibold">Can bid {x.bid} quotes</p>
               <Subscriber i={i} x={x} />
             </div>
           </div>
