@@ -19,7 +19,6 @@ export default async function Details({ id }: { id: string | number }) {
   const call: AnyType = await ViewBrowsedQuoteApi(id, token ?? "");
   const data = call?.data;
   const planCall: AnyType = await CurrentAplanApi(token);
-  //
   if (!data) {
     <div className={`flex justify-center items-center h-24 mx-auto`}>
       <Loader2Icon className={`animate-spin`} />
