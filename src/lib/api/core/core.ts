@@ -26,19 +26,19 @@ export const getMyQuotesApi = async(status:"Pending"| "In progress" |"Completed"
 };
 
 export const viewQuoteApi = async(id:string|number,token:string) => {
-  return await howl({link:`/user/view-quote/${id}`,token})
+  return await howl({link:`/user/view-quote/${id}`,token,cache:'no-cache'})
 };
 
 export const deleteQuoteApi = async(id:string|number,token:string) => {
   return await howl({link:`/user/delete-quote/${id}`,token})
 };
 
-export const getCheckBidsApi = async(token:string) => {
-  return await howl({link:`/user/get-check-bids`,token})
+export const getCheckBidsApi = async(id:string|number,token:string) => {
+  return await howl({link:`/user/get-check-bids?quote_id=${id}`,token})
 };
 
-export const getAcceptedBidsApi = async(token:string) => {
-  return await howl({link:`/user/get-accepted-bids`,token})
+export const getAcceptedBidsApi = async(id:string|number,token:string) => {
+  return await howl({link:`/user/get-accepted-bids?quote_id=${id}`,token})
 };
 
 export const acceptedBidApi = async(id:string|number,token:string) => {
@@ -77,6 +77,12 @@ export const myOrdersApi = async(pending:"Pending"| "In progress"| "Completed"|"
   return await howl({link:`/user/get-my-quotes?status=${pending}&per_page=14&page=${page}`,token});
 };
 
+export const acceptRequestApi = async(id:string|number,token:string) => {
+  return await howl({link:`/user/accept-request?bid_id=${id}`,method:"patch",token});
+};
+export const cancelRequestApi = async(id:string|number,token:string) => {
+  return await howl({link:`/user/cancel-order?bid_id=${id}`,method:"patch",token}); 
+};
 
 //*PROVIDER APIS:
 
