@@ -122,9 +122,7 @@ export default async function Details({ id }: { id: string | number }) {
               Chat
             </Link>
           </Button>
-          <Button className="rounded-full" asChild>
-            <Link href={"/service"}>Track the service</Link>
-          </Button>
+          <Button className="rounded-full">Cancel bid</Button>
         </div>
       </div>
       <div className="">

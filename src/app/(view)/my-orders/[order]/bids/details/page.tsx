@@ -4,10 +4,13 @@ import { Loader2Icon } from "lucide-react";
 
 export default async function Page({
   searchParams,
+  params,
 }: {
   searchParams: Promise<{ id?: string; quote?: string; xxx?: string }>;
+  params: Promise<{ order: string }>;
 }) {
   const { id, quote, xxx } = await searchParams;
+  const { order } = await params;
 
   if (!id) {
     return <div>No provider ID found in search params</div>;
@@ -30,7 +33,7 @@ export default async function Page({
       >
         <Details
           id={id as string}
-          quoteId={quote as string}
+          quoteId={order as string}
           xxx={xxx as string}
         />
       </Suspense>

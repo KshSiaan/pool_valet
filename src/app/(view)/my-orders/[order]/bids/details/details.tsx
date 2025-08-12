@@ -127,7 +127,15 @@ export default async function Details({
               <MailIcon /> Chat with CleanPro Pools
             </Link>
           </Button>
-          <Controller id={quote.id} status={quote.status} xxx={xxx} />
+
+          {id && (
+            <Controller
+              prov={id}
+              id={quote.id}
+              status={quote.status}
+              xxx={xxx}
+            />
+          )}
         </div>
       </div>
       <div className="space-y-6!">

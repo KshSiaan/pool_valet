@@ -119,16 +119,33 @@ export default function ResponsiveNavbar() {
       <Button variant="ghost" onClick={() => handleScroll("fp")}>
         For Providers
       </Button>
-      <Button variant="ghost" asChild>
-        <Link href="/get-service" onClick={() => setIsOpen(false)}>
-          Get Quotes
-        </Link>
-      </Button>
-      <Button variant="ghost" asChild>
-        <Link href="/my-orders" onClick={() => setIsOpen(false)}>
-          My Orders
-        </Link>
-      </Button>
+
+      {data?.data?.role === "PROVIDER" ? (
+        <Button variant="ghost" asChild>
+          <Link href="/service" onClick={() => setIsOpen(false)}>
+            My Services
+          </Link>
+        </Button>
+      ) : (
+        <Button variant="ghost" asChild>
+          <Link href="/my-orders" onClick={() => setIsOpen(false)}>
+            My Orders
+          </Link>
+        </Button>
+      )}
+      {data?.data?.role === "PROVIDER" ? (
+        <Button variant="ghost" asChild>
+          <Link href="/earnings" onClick={() => setIsOpen(false)}>
+            Earnings
+          </Link>
+        </Button>
+      ) : (
+        <Button variant="ghost" asChild>
+          <Link href="/get-service" onClick={() => setIsOpen(false)}>
+            Get Quotes
+          </Link>
+        </Button>
+      )}
     </>
   );
 

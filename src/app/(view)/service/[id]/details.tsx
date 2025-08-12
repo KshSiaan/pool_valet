@@ -11,6 +11,7 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Butts from "./butts";
 
 export default async function Details({ id }: { id: string | number }) {
   const token = (await cookies()).get("ghost")?.value;
@@ -115,17 +116,7 @@ export default async function Details({ id }: { id: string | number }) {
             <p>25</p>
           </div>
         </div>
-        <div className="my-12 grid grid-cols-2 gap-6">
-          <Button variant={"outline"} className="rounded-full" asChild>
-            <Link href={`/chat?to=${data?.user?.profile?.id ?? ""}`}>
-              <MailIcon />
-              Chat
-            </Link>
-          </Button>
-          <Button className="rounded-full" asChild>
-            <Link href={"/service"}>Track the service</Link>
-          </Button>
-        </div>
+        <Butts data={data} />
       </div>
       <div className="">
         <Image

@@ -8,14 +8,14 @@ import React from "react";
 import { serverImageBuilder } from "@/lib/formatter";
 import { CurrentAplanApi, ViewBrowsedQuoteApi } from "@/lib/api/core/core";
 import { cookies } from "next/headers";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import Bidder from "./bidder";
 import Link from "next/link";
 
 export default async function Details({ id }: { id: string | number }) {
   const token = (await cookies()).get("ghost")?.value;
   if (!token) {
-    return notFound();
+    return redirect("/404");
   }
   const call: AnyType = await ViewBrowsedQuoteApi(id, token ?? "");
   const data = call?.data;

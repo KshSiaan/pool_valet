@@ -1,6 +1,6 @@
 import { Loader2Icon } from "lucide-react";
 import React, { Suspense } from "react";
-import Details from "./detail";
+import Details from "./details";
 
 export default async function Page({
   params,
@@ -17,7 +17,7 @@ export default async function Page({
           </div>
         }
       >
-        {id && <Details id={id} />}
+        <Details id={id} />
       </Suspense>
     </main>
   );
