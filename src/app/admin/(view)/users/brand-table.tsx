@@ -21,11 +21,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import { useCookies } from "react-cookie";
-import { getUsersApi } from "@/lib/api/admin/admin";
+import { deleteUserApi, getUsersApi } from "@/lib/api/admin/admin";
 import { Input } from "@/components/ui/input";
 import { AnyType } from "@/lib/config/error-type";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+import { toast } from "sonner";
 
 function useDebounce<T>(value: T, delay = 400) {
   const [debounced, setDebounced] = useState(value);
@@ -42,7 +43,7 @@ export default function BrandTable() {
   const [page, setPage] = useState(1);
   const debouncedSearch = useDebounce(search);
 
-  const { data, isFetching }: AnyType = useQuery({
+  const { data, isFetching, refetch }: AnyType = useQuery({
     queryKey: ["users", page, debouncedSearch],
     queryFn: () => getUsersApi(page, debouncedSearch, cookies.ghost),
   });
@@ -157,7 +158,29 @@ export default function BrandTable() {
                           <Button
                             variant="destructive"
                             className="text-sm !mt-6 !bg-background border !border-destructive !text-destructive"
-                            onClick={() => {}}
+                            onClick={async () => {
+                              try {
+                                const call: AnyType = await deleteUserApi(
+                                  customer.id,
+                                  cookies.ghost
+                                );
+                                if (!call.status) {
+                                  toast.error(
+                                    call.message ??
+                                      `Failed to delete ${customer.full_name}`
+                                  );
+                                } else {
+                                  toast.success(
+                                    call.message ??
+                                      `${customer.full_name} deleted successfyully`
+                                  );
+                                  refetch();
+                                }
+                              } catch (error) {
+                                console.error(error);
+                                toast.error("Something went wrong");
+                              }
+                            }}
                           >
                             <TrashIcon />
                             Delete
@@ -173,19 +196,19 @@ export default function BrandTable() {
 
       <div className="border-t mt-2! flex flex-row justify-between items-center pt-6! text-sm">
         <p>
-          Page {data?.users.current_page} of {data?.users.last_page}
+          Page {data?.users?.current_page} of {data?.users?.last_page}
         </p>
         <div className="flex items-center gap-4">
           <Button
             variant="outline"
-            disabled={data?.users.current_page === data?.users.from}
+            disabled={data?.users?.current_page === data?.users?.from}
             onClick={() => setPage((p) => p - 1)}
           >
             Previous
           </Button>
           <Button
             variant="outline"
-            disabled={data?.users.current_page === data?.users.last_page}
+            disabled={data?.users?.current_page === data?.users?.last_page}
             onClick={() => setPage((p) => p + 1)}
           >
             Next

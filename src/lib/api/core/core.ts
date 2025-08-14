@@ -73,8 +73,12 @@ export const getPageApi = async(type:'legal_resources'| 'about_us'| 'terms_condi
   return await howl({link:`/get-page?page_type=${type}`})
 };
 
-export const myOrdersApi = async(pending:"Pending"| "In progress"| "Completed"|"", page:string|number,token:string) => {
+export const myOrdersApi = async(pending:"", page:string|number,token:string) => {
   return await howl({link:`/user/get-my-quotes?status=${pending}&per_page=14&page=${page}`,token});
+};
+
+export const myAcceptedOrdersApi = async(pending:"In progress"| "Completed", page:string|number,token:string) => {
+  return await howl({link:`/user/get-accepted-bids?status=${pending}&per_page=14&page=${page}`,token});
 };
 
 export const acceptRequestApi = async(id:string|number,token:string) => {
