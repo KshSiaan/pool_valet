@@ -32,6 +32,7 @@ export default async function Details({
   xxx: string;
 }) {
   const token = (await cookies()).get("ghost")?.value;
+
   if (!token) {
     return (
       <div className={`flex justify-center items-center h-24 mx-auto`}>
@@ -80,18 +81,6 @@ export default async function Details({
       <div className="space-y-6!">
         <Card>
           <CardContent className="grid grid-cols-2 gap-6">
-            {/* <div className="">
-              <h3 className="text-muted-foreground">Service Type</h3>
-              <p className="font-semibold">Pool Maintainance</p>
-            </div> */}
-            {/* <div className="">
-              <h3 className="text-muted-foreground">Experience</h3>
-              <p className="font-semibold">8 years</p>
-            </div> */}
-            {/* <div className="">
-              <h3 className="text-muted-foreground">Response Time</h3>
-              <p className="font-semibold">Within 2 hours</p>
-            </div> */}
             <div className="">
               <h3 className="text-muted-foreground">Service Rating </h3>
               <p className="flex items-center gap-1 font-semibold">
@@ -123,8 +112,8 @@ export default async function Details({
         </Card>
         <div className="w-full flex flex-row justify-between items-center">
           <Button variant="outline" className="rounded-full" size="lg" asChild>
-            <Link href={"/chat"}>
-              <MailIcon /> Chat with CleanPro Pools
+            <Link href={`/chat?id=${user.id}`}>
+              <MailIcon /> Chat with {user.full_name}
             </Link>
           </Button>
 

@@ -10,8 +10,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { EllipsisVerticalIcon, Trash2Icon } from "lucide-react";
 import React from "react";
+// import { useQuery } from "@tanstack/react-query";
 
 export default function Page() {
+  // const {data} = useQuery({
+  //   queryKey:["profile"],
+  //   queryFn:()=>{
+  //     return getPRofi
+  //   }
+  // })
   return (
     <main className="lg:h-[80dvh] my-6! px-2! lg:px-8!">
       <div className="w-full h-full grid lg:grid-cols-7 gap-6">

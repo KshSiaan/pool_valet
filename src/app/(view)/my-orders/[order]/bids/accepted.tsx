@@ -50,7 +50,7 @@ export default function Accepted({ id }: { id: string | number }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data?.data?.data.map((x: AnyType) => (
+        {data?.data?.data?.map((x: AnyType) => (
           <TableRow key={x.id}>
             <TableCell className="font-semibold flex items-center gap-2 justify-center">
               <Avatar>

@@ -49,3 +49,16 @@ export const getProfileApi = async(token:string) => {
 export const logoutApi  = async(token:string) => {
   return await howl({link:"/logout",method:"post",token})
 };
+//notif
+export const getNotificationApi = async(token:string) => {
+  return await howl({link:"/get-notifications",token})
+};
+export const readApi = async(id:string,token:string) => {
+  return await howl({link:`/read?notification_id=${id}`,method:"patch",token})
+};
+export const readAllApi = async(token:string) => {
+  return await howl({link:"/read-all",method:"patch",token})
+};
+export const getUnreadApi = async(token:string) => {
+  return await howl({link:"/notification-status",token})
+};

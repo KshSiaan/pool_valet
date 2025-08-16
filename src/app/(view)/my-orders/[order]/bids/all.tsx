@@ -51,40 +51,51 @@ export default function All({ id }: { id: string | number }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data?.data?.data.map((x: AnyType) => (
-          <TableRow key={x.id}>
-            <TableCell className="font-semibold flex items-center gap-2 justify-center">
-              <Avatar>
-                <AvatarImage
-                  src={
-                    serverImageBuilder(x.provider.avatar) ??
-                    `https://avatar.iran.liara.run/public/${1}`
-                  }
-                />
-                <AvatarFallback>UI</AvatarFallback>
-              </Avatar>
-              {x.provider.full_name}
-            </TableCell>
-            <TableCell className="font-medium text-center">
-              ${x.price_offered}
-            </TableCell>
-            <TableCell className="text-center flex gap-1 justify-center">
-              <StarIcon fill="#FFD700" stroke="" className="size-5" />{" "}
-              {x.average_rating}
-            </TableCell>
-            <TableCell className="text-center">
-              <Button variant="ghost" asChild>
-                <Link
-                  href={`bids/details?id=${x.provider.id}&quote=${
-                    x.id
-                  }&xxx=${encrypt(x.price_offered)}`}
-                >
-                  View Details <ArrowRight />
-                </Link>
-              </Button>
+        {Array.isArray(data?.data) && data.data.length > 0 ? (
+          data.data.map((x: AnyType) => (
+            <TableRow key={x.id}>
+              <TableCell className="font-semibold flex items-center gap-2 justify-center">
+                <Avatar>
+                  <AvatarImage
+                    src={
+                      serverImageBuilder(x.provider.avatar) ??
+                      `https://avatar.iran.liara.run/public/${1}`
+                    }
+                  />
+                  <AvatarFallback>UI</AvatarFallback>
+                </Avatar>
+                {x.provider.full_name}
+              </TableCell>
+              <TableCell className="font-medium text-center">
+                ${x.price_offered}
+              </TableCell>
+              <TableCell className="text-center flex gap-1 justify-center">
+                <StarIcon fill="#FFD700" stroke="" className="size-5" />{" "}
+                {x.average_rating}
+              </TableCell>
+              <TableCell className="text-center">
+                <Button variant="ghost" asChild>
+                  <Link
+                    href={`bids/details?id=${x.provider.id}&quote=${
+                      x.id
+                    }&xxx=${encrypt(x.price_offered)}`}
+                  >
+                    View Details <ArrowRight />
+                  </Link>
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell
+              colSpan={4}
+              className="text-center text-muted-foreground"
+            >
+              No bids found
             </TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );
