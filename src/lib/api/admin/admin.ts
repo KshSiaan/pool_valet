@@ -1,3 +1,4 @@
+import { AnyType } from "@/lib/config/error-type";
 import howl from "@/lib/howl";
 
 
@@ -27,9 +28,9 @@ export const getTransactionApi = async(page:string|number,token:string) => {
 };
 
 // Category APIs
-export const getCategoriesApi = async (token: string, page?: string | number) => {
-  const pageQuery = page ? `?per_page=10&page=${page}` : "";
-  return await howl({ link: `/admin/get-categories${pageQuery}`, token });
+export const getCategoriesApi = async (token: string) => {
+
+  return await howl({ link: `/admin/get-categories`, token });
 };
 
 export const viewCategoryApi = async (id: string | number, token: string) => {
@@ -38,15 +39,15 @@ export const viewCategoryApi = async (id: string | number, token: string) => {
 
 export const addCategoryApi = async (
   token: string,
-  data: { icon: string; name: string }
+  data: FormData
 ) => {
+
   return await howl({
     link: `/admin/add-category`,
-    method: "post",
-    token,
-    data,
+    method:"post",data,token,content:"form"
   });
 };
+
 
 export const editCategoryApi = async (
   id: string | number,
@@ -68,3 +69,14 @@ export const deleteCategoryApi = async (id: string | number, token: string) => {
     token,
   });
 };
+
+// subsc
+
+export const getSubscriptionApi = async (token: string) => {
+  return await howl({ link: `/admin/get-subscriptions`, token });
+};
+
+export const updateSubscription = async (id:string|number,token: string,data:AnyType) => {
+  return await howl({ link: `/admin/update-subscription/${id}`,method:"post",data, token });
+};
+

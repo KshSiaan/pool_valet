@@ -153,3 +153,11 @@ export const completeBidApi = async (id:string|number,token:string)=>{
 export const earningsApi = async (token:string,page:string|number,status?:string|null)=>{
   return await howl({link:`/provider/my-earnings?per_page=10&page=${page}${status&&`&status=${status??""}`}`,token});
 }
+
+
+//chat
+
+
+export const getChatListApi = async (token:string,search:string)=>{
+  return await howl({link:`/chat-lists?search=${search}`,token});
+}

@@ -1,5 +1,7 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Goback from "./goback";
+import User from "./user";
+import { Loader2Icon } from "lucide-react";
 
 export default async function Page({
   params,
@@ -17,9 +19,16 @@ export default async function Page({
           Provider details at a glance
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-6">
-        <div className="bg-background shadow rounded-lg p-6"></div>
-        <div className="bg-background shadow rounded-lg p-6"></div>
+      <div className="grid grid-cols-1 gap-6">
+        <Suspense
+          fallback={
+            <div className={`flex justify-center items-center h-24 mx-auto`}>
+              <Loader2Icon className={`animate-spin`} />
+            </div>
+          }
+        >
+          {user && <User user={user} />}
+        </Suspense>
       </div>
     </div>
   );
