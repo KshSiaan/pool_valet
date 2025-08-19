@@ -22,7 +22,10 @@ export default function Page() {
         </p>
       </div>
       <div className="flex justify-end my-6 !pr-6">
-        <Select value={timeRange} onValueChange={setTimeRange}>
+        <Select
+          value={timeRange}
+          onValueChange={(value) => setTimeRange(value as "7" | "30" | "90")}
+        >
           <SelectTrigger className="w-[160px] rounded-lg border-0 shadow-none">
             <SelectValue placeholder="Last 3 months" />
           </SelectTrigger>
