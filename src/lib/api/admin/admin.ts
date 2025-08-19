@@ -2,6 +2,10 @@ import { AnyType } from "@/lib/config/error-type";
 import howl from "@/lib/howl";
 
 
+export const getDashboardApi = async(filter:string|number,token:string) => {
+  return await howl({link:`/admin/get-data?filter=${filter}`,token})
+};
+
 export const getUsersApi = async(page:string|number,search:string|null,token:string) => {
   return await howl({link:`/admin/get-users?per_page=10&page=${page}${search?`&search=${search}`:""}`,token})
 };
@@ -80,3 +84,11 @@ export const updateSubscription = async (id:string|number,token: string,data:Any
   return await howl({ link: `/admin/update-subscription/${id}`,method:"post",data, token });
 };
 
+export const updateAdminProfile = async (token: string,data:AnyType) => {
+  return await howl({ link: `/admin/update-profile`,method:"post",data, token });
+};
+
+
+export const updatePageApi = async (token: string,data:AnyType) => {
+  return await howl({ link: `/admin/update-profile`,method:"post",data, token });
+};

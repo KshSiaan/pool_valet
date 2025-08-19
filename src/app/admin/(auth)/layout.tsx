@@ -1,34 +1,42 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Suspense } from "react";
 import { cookies } from "next/headers";
-import { AnyType } from "@/lib/config/error-type";
 import { getProfileApi } from "@/lib/api/auth/auth";
 import { notFound, redirect } from "next/navigation";
+import { AnyType } from "@/lib/config/error-type";
 
 export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  const token = (await cookies()).get("ghost")?.value;
+}) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("ghost")?.value;
+  let user: AnyType;
+
+  try {
+    user = await getProfileApi(token as string);
+  } catch (error) {
+    console.error("Failed to fetch user profile:", error);
+    cookieStore.delete("ghost");
+    redirect("/login");
+  }
 
   if (token) {
-    const user: AnyType = await getProfileApi(token);
-    console.log(user.role);
-
-    if (user.data.role === "ADMIN") {
-      redirect("/admin/dashboard");
+    if (!user.status) {
+      cookieStore.delete("ghost");
+      redirect("/login");
     }
-
-    if (["PROVIDER", "USER"].includes(user.data.role)) {
-      notFound();
+    switch (user.data.role) {
+      case "ADMIN":
+        redirect("/admin/dashboard");
+      case "PROVIDER":
+      case "USER":
+        notFound();
+      default:
+        notFound();
     }
-
-    // Optional fallback
-    notFound();
   }
-  return (
-    <>
-      <Suspense fallback={"Please wait a second.."}>{children}</Suspense>
-    </>
-  );
+
+  return <Suspense fallback="Please wait a second...">{children}</Suspense>;
 }

@@ -18,13 +18,18 @@ export default async function RootLayout({
 }>) {
   const token = (await cookies()).get("ghost")?.value;
   let user: AnyType;
+
+  if (!token) {
+    return redirect("/admin/login");
+  }
+
   try {
     user = token ? await getProfileApi(token) : null;
   } catch {
     return redirect("/admin/login");
   }
 
-  if (user.data.role === "ADMIN") {
+  if (user?.data?.role === "ADMIN") {
     return (
       <>
         <main className="grid grid-cols-11 pr-6">

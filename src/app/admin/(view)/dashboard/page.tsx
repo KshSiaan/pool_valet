@@ -2,7 +2,17 @@
 import { TrendingUp, Users2Icon } from "lucide-react";
 import React from "react";
 import { ChartPart } from "./chart-part";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 export default function Page() {
+  const [timeRange, setTimeRange] = React.useState<"7" | "30" | "90">("7");
+
   return (
     <>
       <div className="!pb-6 ">
@@ -11,6 +21,25 @@ export default function Page() {
           Activities summary at a glance{" "}
         </p>
       </div>
+      <div className="flex justify-end my-6 !pr-6">
+        <Select value={timeRange} onValueChange={setTimeRange}>
+          <SelectTrigger className="w-[160px] rounded-lg border-0 shadow-none">
+            <SelectValue placeholder="Last 3 months" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl">
+            <SelectItem value="90" className="rounded-lg">
+              Last 3 months
+            </SelectItem>
+            <SelectItem value="30" className="rounded-lg">
+              Last 30 days
+            </SelectItem>
+            <SelectItem value="7" className="rounded-lg">
+              Last 7 days
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <div className="grid grid-cols-3 gap-6 !pr-6">
         {Array.from({ length: 3 }).map((_, i) => (
           <div
@@ -31,6 +60,7 @@ export default function Page() {
           </div>
         ))}
       </div>
+
       <div className="!mt-6 !pr-6">
         <ChartPart />
       </div>

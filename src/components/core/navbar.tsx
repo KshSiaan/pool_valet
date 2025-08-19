@@ -28,7 +28,12 @@ import {
 } from "@/components/ui/sheet";
 import { useCookies } from "react-cookie";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getProfileApi, getUnreadApi, logoutApi } from "@/lib/api/auth/auth";
+import {
+  getProfileApi,
+  getUnreadApi,
+  getUnreadChatApi,
+  logoutApi,
+} from "@/lib/api/auth/auth";
 import { AnyType } from "@/lib/config/error-type";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import Notifs from "./notifs";
@@ -61,6 +66,11 @@ export default function ResponsiveNavbar() {
   const { data: notif }: AnyType = useQuery({
     queryKey: ["notif"],
     queryFn: () => getUnreadApi(cookies.ghost),
+    enabled: !!cookies.ghost,
+  });
+  const { data: chat }: AnyType = useQuery({
+    queryKey: ["chat"],
+    queryFn: () => getUnreadChatApi(cookies.ghost),
     enabled: !!cookies.ghost,
   });
 
@@ -220,9 +230,12 @@ export default function ResponsiveNavbar() {
           <Button size="icon" variant="ghost" className="relative" asChild>
             <Link href="/chat">
               <MailIcon className="h-4 w-4 md:h-5 md:w-5" />
-              <div className="text-[10px] flex justify-center items-center top-0 right-0 absolute bg-destructive size-4 rounded-full text-background">
-                12
-              </div>
+
+              {parseInt(chat?.unread) > 0 && (
+                <div className="text-[10px] flex justify-center items-center top-0 right-0 absolute bg-destructive size-4 rounded-full text-background">
+                  {chat.unread}
+                </div>
+              )}
             </Link>
           </Button>
 

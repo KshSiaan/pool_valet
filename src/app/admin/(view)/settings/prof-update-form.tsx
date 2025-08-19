@@ -12,10 +12,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { updateAdminProfile } from "@/lib/api/admin/admin";
 import { getProfileApi } from "@/lib/api/auth/auth";
 import { AnyType } from "@/lib/config/error-type";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import React, { useEffect } from "react";
 import { useCookies } from "react-cookie";
@@ -34,6 +35,12 @@ export default function ProfUpdateForm() {
   const { data, isPending }: AnyType = useQuery({
     queryKey: ["profile"],
     queryFn: () => getProfileApi(cookies.ghost),
+  });
+  const { mutate } = useMutation({
+    mutationKey: ["profile"],
+    mutationFn: (data: AnyType) => {
+      return updateAdminProfile(cookies.ghost, data);
+    },
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -56,8 +63,16 @@ export default function ProfUpdateForm() {
   function submitter(values: z.infer<typeof formSchema>) {
     const payload = { ...values, _method: "PATCH" };
     console.log(payload);
-    toast.info("Under Development");
-    // toast.success("Your profile data is updated");
+    mutate(payload, {
+      onError: (err: AnyType) => {
+        toast.error(
+          err.message ?? err.data.message ?? "Failed to update profile"
+        );
+      },
+      onSuccess: (data: AnyType) => {
+        toast.success(data.message ?? "Successfully updated Admin profile");
+      },
+    });
   }
 
   if (isPending) {
