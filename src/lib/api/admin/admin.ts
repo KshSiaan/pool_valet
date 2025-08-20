@@ -6,6 +6,10 @@ export const getDashboardApi = async(filter:string|number,token:string) => {
   return await howl({link:`/admin/get-data?filter=${filter}`,token})
 };
 
+export const getChartApi = async(token:string) => {
+  return await howl({link:`/admin/get-chart`,token})
+};
+
 export const getUsersApi = async(page:string|number,search:string|null,token:string) => {
   return await howl({link:`/admin/get-users?per_page=10&page=${page}${search?`&search=${search}`:""}`,token})
 };
@@ -92,3 +96,11 @@ export const updateAdminProfile = async (token: string,data:AnyType) => {
 export const updatePageApi = async (token: string,data:AnyType) => {
   return await howl({ link: `/admin/update-profile`,method:"post",data, token });
 };
+
+
+// content
+
+export const createContentApi = async (data:AnyType,token:string)=>{
+  return await howl({ link: `/admin/create-page`,method:"post",data, token });
+}
+

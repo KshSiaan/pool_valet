@@ -69,7 +69,7 @@ export const viewReviewApi = async(id:string|number,token:string) => {
   return await howl({link:`/user/view-review/${id}`,token})
 };
 
-export const getPageApi = async(type:'legal_resources'| 'about_us'| 'terms_conditions' ) => {
+export const getPageApi = async(type:'privacy'|'tnc' ) => {
   return await howl({link:`/get-page?page_type=${type}`})
 };
 
@@ -160,4 +160,10 @@ export const earningsApi = async (token:string,page:string|number,status?:string
 
 export const getChatListApi = async (token:string,search:string)=>{
   return await howl({link:`/chat-lists?search=${search}`,token});
+}
+
+//content
+
+export const getPage = async (type:string,token:string)=>{
+  return await howl({ link: `/get-page?page_type=${type}`, token });
 }
