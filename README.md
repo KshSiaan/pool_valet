@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Got it—thanks Raven 👌 since you only handled the **frontend repo**, I’ll scope the README to that. I’ll keep it professional but simple, with clarity that backend isn’t included here.
 
-## Getting Started
+Here’s a polished draft for your **README.md**:
 
-First, run the development server:
+---
+
+# PoolValet – Frontend
+
+PoolValet is a platform that connects homeowners with pool service providers.
+This repository contains the **frontend** application, built with Next.js and integrated with backend APIs for full functionality.
+
+---
+
+## 🚀 Features
+
+* **Homeowner Experience**
+
+  * Request pool services through a simple form
+  * Compare quotes from verified providers
+  * Book and pay securely with **Stripe**
+
+* **Provider Experience**
+
+  * Manage incoming service requests
+  * Send quotes to homeowners
+  * Organize schedules and build reputation
+
+* **Admin**
+
+  * Manage users and providers
+  * Oversee service requests and platform activity
+
+---
+
+## 🛠️ Tech Stack
+
+* **Framework:** Next.js (React + TypeScript)
+* **State/Data:** TanStack Query
+* **Payments:** Stripe (frontend integration)
+* **Styling & UI:** (add your preferred styling library here if used, e.g., Tailwind, ShadCN, etc.)
+* **API Integration:** Fully connected with backend endpoints (developed separately)
+
+---
+
+## 📂 Roles in System
+
+* **User (Homeowner)** – requests and books pool services
+* **Provider** – responds to requests and manages jobs
+* **Admin** – manages the entire platform
+
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+
+* Node.js (v18+)
+* npm
+
+### Installation
 
 ```bash
+# clone repository
+git clone <repo-url>
+
+# navigate into project
+cd poolvalet-frontend
+
+# install dependencies
+npm install
+
+# run locally
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# build production
+npm run build
+npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> ⚠️ Note: `.env` setup is required but not documented here (private company project).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📡 API & Backend
 
-## Learn More
+This repository is **frontend only**.
+All APIs and backend logic (auth, role management, lead handling, etc.) were implemented separately.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔒 License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This is a **private company project**.
+Not open source.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Would you like me to also add:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* ✅ A **screenshot/preview section** (mock UI shots)?
+* ✅ A **folder structure breakdown** of your Next.js app?
+
+That could make the README extra dev-friendly.
