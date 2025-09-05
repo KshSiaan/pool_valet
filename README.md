@@ -1,9 +1,3 @@
-Got it—thanks Raven 👌 since you only handled the **frontend repo**, I’ll scope the README to that. I’ll keep it professional but simple, with clarity that backend isn’t included here.
-
-Here’s a polished draft for your **README.md**:
-
----
-
 # PoolValet – Frontend
 
 PoolValet is a platform that connects homeowners with pool service providers.
